@@ -8,4 +8,5 @@
     <string name="items">Товары</string>
     <string name="profile">Профиль</string>
     <string name="sign_out">Выйти</string>
+    <string name="sign_intext">Войти</string>
 </resources>
