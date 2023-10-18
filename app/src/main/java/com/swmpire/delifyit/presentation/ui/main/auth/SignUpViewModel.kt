@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.viewmodel
+package com.swmpire.delifyit.presentation.ui.main.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,14 +23,7 @@ class SignUpViewModel @Inject constructor(
     private val _signUpFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     val signUpFlow: StateFlow<NetworkResult<Boolean>> get() = _signUpFlow
 
-    private val currentStore: FirebaseUser? get() = getFirebaseStoreUseCase.invoke()
 
-    // remove init to disable auto-auth
-    init {
-        currentStore.let {
-            _signUpFlow.value = NetworkResult.Success(true)
-        }
-    }
 
     fun signUpStore(storeModel: StoreModel) {
         viewModelScope.launch(Dispatchers.IO) {

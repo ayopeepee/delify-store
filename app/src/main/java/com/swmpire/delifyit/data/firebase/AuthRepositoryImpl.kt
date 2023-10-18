@@ -56,11 +56,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    // change the firebase call like in firebaseSignUp so the race condition doesn't appear!!!
     override suspend fun firebaseSignIn(
         email: String,
         password: String
     ): Flow<NetworkResult<Boolean>> {
+        // TODO: change the firebase call like in firebaseSignUp so the race condition doesn't appear!!!
         return flow {
             var isSuccess = false
 

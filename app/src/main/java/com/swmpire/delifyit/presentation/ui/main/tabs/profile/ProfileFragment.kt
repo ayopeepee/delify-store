@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.ui.fragment
+package com.swmpire.delifyit.presentation.ui.main.tabs.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentProfileBinding
-import com.swmpire.delifyit.presentation.viewmodel.ProfileViewModel
+import com.swmpire.delifyit.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,10 +31,16 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSignOut.setOnClickListener {
-            profileViewModel.signOut()
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
-        }
+        binding.buttonSignOut.setOnClickListener { onSignOutButtonPressed() }
+    }
+
+    private fun onSignOutButtonPressed() {
+        profileViewModel.signOut()
+        findTopNavController().navigate(R.id.signInFragment, null, navOptions {
+            popUpTo(R.id.tabsFragment) {
+                inclusive = true
+            }
+        })
     }
 
     override fun onDestroyView() {

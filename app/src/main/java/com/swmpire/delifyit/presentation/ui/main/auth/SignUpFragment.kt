@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.ui.fragment
+package com.swmpire.delifyit.presentation.ui.main.auth
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.databinding.FragmentSignUpBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
-import com.swmpire.delifyit.presentation.viewmodel.SignUpViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,7 +47,7 @@ class SignUpFragment : Fragment() {
                         password = password
                     ))
                 } else {
-                    // need to replace toast with "error view"
+                    // TODO: need to replace toast with "error view"
                     Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -58,15 +57,19 @@ class SignUpFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signUpViewModel.signUpFlow.collect { result ->
                     when(result) {
-                        is NetworkResult.Loading -> binding.buttonNext.isEnabled = false // add progress indicator also
+                        is NetworkResult.Loading -> {
+                            // TODO: add progress indicator
+                            binding.buttonNext.isEnabled = false
+                        }
                         is NetworkResult.Error -> {
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show() // need to replace toast with "error view"
+                            // TODO: need to replace toast with "error view"
+                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                             binding.buttonNext.isEnabled = true
                         }
                         is NetworkResult.Success -> {
                             binding.buttonNext.isEnabled = true
                             if (result.data == true) {
-                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToItemsFragment())
+                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())
                             } else {
                                 Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
                             }

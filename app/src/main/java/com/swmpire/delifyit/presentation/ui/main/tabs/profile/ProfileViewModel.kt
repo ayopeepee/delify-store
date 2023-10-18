@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.viewmodel
+package com.swmpire.delifyit.presentation.ui.main.tabs.profile
 
 import androidx.lifecycle.ViewModel
 import com.swmpire.delifyit.domain.usecase.SignOutStoreUseCase
