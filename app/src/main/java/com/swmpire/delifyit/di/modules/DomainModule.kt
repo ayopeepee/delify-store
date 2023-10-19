@@ -1,6 +1,7 @@
 package com.swmpire.delifyit.di.modules
 
 import com.swmpire.delifyit.domain.repository.AuthRepository
+import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreSignStatusUseCase
 import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignInStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignOutStoreUseCase
@@ -29,4 +30,8 @@ object DomainModule {
     @Provides
     fun provideSignOutStoreUseCase(authRepository: AuthRepository) =
         SignOutStoreUseCase(authRepository)
+
+    @Provides
+    fun provideGetFirebaseStoreSignStatusUseCase(authRepository: AuthRepository) =
+        GetFirebaseStoreSignStatusUseCase(authRepository)
 }

@@ -60,7 +60,6 @@ class AuthRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ): Flow<NetworkResult<Boolean>> {
-        // TODO: change the firebase call like in firebaseSignUp so the race condition doesn't appear!!!
         return flow {
             var isSuccess = false
 

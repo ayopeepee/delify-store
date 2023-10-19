@@ -50,7 +50,7 @@ class SignUpFragment : Fragment() {
                     Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
             }
-            buttonSignupToSignin.setOnClickListener{
+            textViewSignupToSignin.setOnClickListener{
                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
             }
         }

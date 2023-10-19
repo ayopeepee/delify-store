@@ -23,7 +23,11 @@
         android:id="@+id/signInFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.auth.SignInFragment"
         android:label="fragment_sign_in"
-        tools:layout="@layout/fragment_sign_in" />
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.TabsFragment"
