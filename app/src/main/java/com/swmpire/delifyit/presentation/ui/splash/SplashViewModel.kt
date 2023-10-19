@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreUseCase
+import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreSignStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val getFirebaseStoreUseCase: GetFirebaseStoreUseCase
+    private  val getFirebaseStoreSignStatusUseCase: GetFirebaseStoreSignStatusUseCase
 ) : ViewModel() {
 
     private val _launchMainScreen: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -19,8 +19,7 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: replace [getFirebaseStoreUseCase.invoke() != null] with calling [GetFirebaseStoreSignStatusUseCase]
-            _launchMainScreen.value = getFirebaseStoreUseCase.invoke() != null
+            _launchMainScreen.value = getFirebaseStoreSignStatusUseCase.invoke()
         }
     }
 }

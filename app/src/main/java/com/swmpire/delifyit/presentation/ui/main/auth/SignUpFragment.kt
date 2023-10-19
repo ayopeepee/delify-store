@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
-
     private val signUpViewModel: SignUpViewModel by viewModels()
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
@@ -50,6 +49,9 @@ class SignUpFragment : Fragment() {
                     // TODO: need to replace toast with "error view"
                     Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
+            }
+            buttonSignupToSignin.setOnClickListener{
+                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
             }
         }
 
