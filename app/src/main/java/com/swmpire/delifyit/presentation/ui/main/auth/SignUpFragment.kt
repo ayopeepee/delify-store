@@ -44,7 +44,7 @@ class SignUpFragment : Fragment() {
 
                 val confirmPassword = textInputConfirmPassword.text.toString().trim()
                 // TODO: add email and confirm password validation too
-                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)) {
+                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)  ) {
                     signUpViewModel.signUpStore(StoreModel(
                         email = textInputEmail.text.toString().trim(),
                         password = textInputPassword.text.toString().trim()
