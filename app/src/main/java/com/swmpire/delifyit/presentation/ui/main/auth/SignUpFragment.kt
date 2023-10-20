@@ -14,7 +14,11 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.databinding.FragmentSignUpBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmValidator
 import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmTextChangeObserver
 import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordValidator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -42,16 +46,23 @@ class SignUpFragment : Fragment() {
         with(binding) {
             buttonNext.setOnClickListener {
 
-                val confirmPassword = textInputConfirmPassword.text.toString().trim()
-                // TODO: add email and confirm password validation too
-                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)  ) {
-                    signUpViewModel.signUpStore(StoreModel(
-                        email = textInputEmail.text.toString().trim(),
-                        password = textInputPassword.text.toString().trim()
-                    ))
+                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)
+                    && EmailValidator.validate(textInputEmail, layoutInputEmail)
+                    && PasswordConfirmValidator.validate(
+                        textInputPassword,
+                        textInputConfirmPassword,
+                        layoutConfirmPassword
+                    )
+                ) {
+                    signUpViewModel.signUpStore(
+                        StoreModel(
+                            email = textInputEmail.text.toString().trim(),
+                            password = textInputPassword.text.toString().trim()
+                        )
+                    )
                 }
             }
-            textViewSignupToSignin.setOnClickListener{
+            textViewSignupToSignin.setOnClickListener {
                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
             }
         }
@@ -59,27 +70,35 @@ class SignUpFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signUpViewModel.signUpFlow.collect { result ->
-                    when(result) {
+                    when (result) {
                         is NetworkResult.Loading -> {
                             binding.progressHorizontal.visibility = View.VISIBLE
                             binding.buttonNext.isEnabled = false
                             binding.layoutInputPassword.error = null
                         }
+
                         is NetworkResult.Error -> {
                             binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
                             // TODO: catch "trying to sign up as already existing account"
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
+                                .show()
                         }
+
                         is NetworkResult.Success -> {
                             binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
                             if (result.data == true) {
                                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())
                             } else {
-                                Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Произошла ошибка",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
+
                         is NetworkResult.Idle -> {}
                     }
                 }
@@ -89,7 +108,19 @@ class SignUpFragment : Fragment() {
     }
 
     private fun subscribeToTextObservers() {
-        PasswordTextChangeObserver(PasswordValidator).observe(binding.textInputPassword, binding.layoutInputPassword)
+        PasswordTextChangeObserver(PasswordValidator).observe(
+            binding.textInputPassword,
+            binding.layoutInputPassword
+        )
+        EmailTextChangeObserver(EmailValidator).observe(
+            binding.textInputEmail,
+            binding.layoutInputEmail
+        )
+        PasswordConfirmTextChangeObserver(PasswordConfirmValidator).observe(
+            binding.textInputPassword,
+            binding.textInputConfirmPassword,
+            binding.layoutConfirmPassword
+        )
     }
 
     override fun onDestroyView() {
