@@ -10,4 +10,5 @@
     <string name="sign_out">Выйти</string>
     <string name="sign_intext">Войти</string>
     <string name="already_have_an_account">Уже есть аккаунт?</string>
+    <string name="confirm_password">Повторите пароль</string>
 </resources>

@@ -13,14 +13,18 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:hint="@string/email"
-        app:layout_constraintBottom_toTopOf="@id/layout_input_password"
+        app:endIconMode="clear_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -30,9 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:hint="@string/password"
-        app:layout_constraintBottom_toTopOf="@id/button_next"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="@id/layout_input_email"
-        app:layout_constraintStart_toStartOf="@id/layout_input_email">
+        app:layout_constraintStart_toStartOf="@id/layout_input_email"
+        app:layout_constraintTop_toBottomOf="@+id/layout_input_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_password"
@@ -42,15 +49,34 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_confirm_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        app:endIconMode="password_toggle"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:layout_constraintTop_toBottomOf="@id/layout_input_password"
+        app:layout_constraintStart_toStartOf="@id/layout_input_password"
+        app:layout_constraintEnd_toEndOf="@id/layout_input_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/button_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_confirm_password" />
 
     <TextView
         android:id="@+id/text_view_already_have_an_account"
