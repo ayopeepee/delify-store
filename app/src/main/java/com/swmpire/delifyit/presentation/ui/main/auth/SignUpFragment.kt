@@ -61,23 +61,18 @@ class SignUpFragment : Fragment() {
                 signUpViewModel.signUpFlow.collect { result ->
                     when(result) {
                         is NetworkResult.Loading -> {
-                            // TODO: add progress indicator
+                            binding.progressHorizontal.visibility = View.VISIBLE
                             binding.buttonNext.isEnabled = false
                             binding.layoutInputPassword.error = null
                         }
                         is NetworkResult.Error -> {
-                            when (result.message) {
-                                "The email address is badly formatted" -> {
-                                    //binding.layoutInputEmail.error = "Некорректный email"
-                                }
-                                "The given password is invalid. [ Password should be at least 6 characters ]" -> {
-                                    //binding.layoutInputPassword.error = "Минимум 6 символов"
-                                }
-                            }
-
+                            binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
+                            // TODO: catch "trying to sign up as already existing account"
+                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                         }
                         is NetworkResult.Success -> {
+                            binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
                             if (result.data == true) {
                                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())

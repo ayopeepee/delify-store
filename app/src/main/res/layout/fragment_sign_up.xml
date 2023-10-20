@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.main.auth.SignUpFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_input_email"
         android:layout_width="0dp"
