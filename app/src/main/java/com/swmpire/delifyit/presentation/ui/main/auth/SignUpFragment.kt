@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.databinding.FragmentSignUpBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordValidator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -35,19 +37,18 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        subscribeToTextObservers()
+
         with(binding) {
             buttonNext.setOnClickListener {
-                val email = textInputEmail.text.toString().trim()
-                val password = textInputPassword.text.toString().trim()
 
-                if (email.isNotBlank() && password.isNotBlank()) {
+                val confirmPassword = textInputConfirmPassword.text.toString().trim()
+                // TODO: add email and confirm password validation too
+                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)) {
                     signUpViewModel.signUpStore(StoreModel(
-                        email = email,
-                        password = password
+                        email = textInputEmail.text.toString().trim(),
+                        password = textInputPassword.text.toString().trim()
                     ))
-                } else {
-                    // TODO: need to replace toast with "error view"
-                    Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
             }
             textViewSignupToSignin.setOnClickListener{
@@ -62,10 +63,18 @@ class SignUpFragment : Fragment() {
                         is NetworkResult.Loading -> {
                             // TODO: add progress indicator
                             binding.buttonNext.isEnabled = false
+                            binding.layoutInputPassword.error = null
                         }
                         is NetworkResult.Error -> {
-                            // TODO: need to replace toast with "error view"
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                            when (result.message) {
+                                "The email address is badly formatted" -> {
+                                    //binding.layoutInputEmail.error = "Некорректный email"
+                                }
+                                "The given password is invalid. [ Password should be at least 6 characters ]" -> {
+                                    //binding.layoutInputPassword.error = "Минимум 6 символов"
+                                }
+                            }
+
                             binding.buttonNext.isEnabled = true
                         }
                         is NetworkResult.Success -> {
@@ -82,6 +91,10 @@ class SignUpFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun subscribeToTextObservers() {
+        PasswordTextChangeObserver(PasswordValidator).observe(binding.textInputPassword, binding.layoutInputPassword)
     }
 
     override fun onDestroyView() {
