@@ -1,6 +1,7 @@
 package com.swmpire.delifyit.presentation.ui.main.auth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -72,30 +73,47 @@ class SignUpFragment : Fragment() {
                 signUpViewModel.signUpFlow.collect { result ->
                     when (result) {
                         is NetworkResult.Loading -> {
-                            binding.progressHorizontal.visibility = View.VISIBLE
-                            binding.buttonNext.isEnabled = false
-                            binding.layoutInputPassword.error = null
+                            with(binding){
+                                progressHorizontal.visibility = View.VISIBLE
+                                buttonNext.isEnabled = false
+                                layoutInputPassword.error = null
+                                textViewError.visibility = View.GONE
+                            }
                         }
 
                         is NetworkResult.Error -> {
                             binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
-                            // TODO: catch "trying to sign up as already existing account"
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
-                                .show()
+                            when(result.message) {
+                                "The email address is already in use by another account." -> {
+                                    with(binding.textViewError){
+                                        text = "Аккаунт с таким email уже существует"
+                                        visibility = View.VISIBLE
+                                    }
+                                }
+                                else -> {
+                                    with(binding.textViewError){
+                                        text = "Произошла ошибка"
+                                        visibility = View.VISIBLE
+                                    }
+                                }
+                            }
                         }
 
                         is NetworkResult.Success -> {
-                            binding.progressHorizontal.visibility = View.GONE
-                            binding.buttonNext.isEnabled = true
+                            with(binding){
+                                progressHorizontal.visibility = View.GONE
+                                textViewError.visibility = View.GONE
+                            }
+
                             if (result.data == true) {
                                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())
                             } else {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Произошла ошибка",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                with(binding){
+                                    textViewError.text = "Произошла ошибка"
+                                    textViewError.visibility = View.VISIBLE
+                                    progressHorizontal.visibility = View.GONE
+                                }
                             }
                         }
 
