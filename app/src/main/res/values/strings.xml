@@ -11,4 +11,6 @@
     <string name="sign_intext">Войти</string>
     <string name="already_have_an_account">Уже есть аккаунт?</string>
     <string name="confirm_password">Повторите пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="reset">Сбросить</string>
 </resources>

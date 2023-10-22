@@ -88,6 +88,35 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun firebaseResetPassword(email: String): Flow<NetworkResult<Boolean>> {
+        return flow {
+            var isSuccess = false
+
+            emit(NetworkResult.Loading())
+
+            try {
+                firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        isSuccess = if (task.isSuccessful) {
+                            Log.d(TAG, "firebaseResetPassword: success")
+                            true
+                        } else {
+                            Log.e(TAG, "firebaseResetPassword: fail", task.exception)
+                            false
+                        }
+                    }.await()
+
+                if (isSuccess) {
+                    emit(NetworkResult.Success(true))
+                } else {
+                    emit(NetworkResult.Error("something went wrong"))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+
+        }
+    }
     override fun signOut() {
         firebaseAuth.signOut()
     }

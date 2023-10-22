@@ -27,10 +27,24 @@
         <action
             android:id="@+id/action_signInFragment_to_tabsFragment"
             app:destination="@id/tabsFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_passwordResetFragment"
+            app:destination="@id/passwordResetFragment" />
     </fragment>
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.TabsFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
+    <fragment
+        android:id="@+id/passwordResetFragment"
+        android:name="com.swmpire.delifyit.presentation.ui.main.auth.PasswordResetFragment"
+        android:label="fragment_password_reset"
+        tools:layout="@layout/fragment_password_reset" >
+        <action
+            android:id="@+id/action_passwordResetFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/passwordResetFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

@@ -13,5 +13,7 @@ interface AuthRepository {
 
     suspend fun firebaseSignIn(email: String, password: String): Flow<NetworkResult<Boolean>>
 
+    suspend fun firebaseResetPassword(email: String): Flow<NetworkResult<Boolean>>
+
     fun signOut()
 }

@@ -50,6 +50,9 @@ class SignInFragment : Fragment() {
                     Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
             }
+            textViewResetPassword.setOnClickListener {
+                findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToPasswordResetFragment())
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
