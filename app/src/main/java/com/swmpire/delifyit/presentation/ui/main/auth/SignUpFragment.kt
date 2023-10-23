@@ -107,7 +107,7 @@ class SignUpFragment : Fragment() {
                             }
 
                             if (result.data == true) {
-                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())
+                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSetStoreInfoFragment())
                             } else {
                                 with(binding){
                                     textViewError.text = "Произошла ошибка"
