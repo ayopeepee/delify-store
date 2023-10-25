@@ -9,4 +9,12 @@
     <string name="profile">Профиль</string>
     <string name="sign_out">Выйти</string>
     <string name="sign_intext">Войти</string>
+    <string name="already_have_an_account">Уже есть аккаунт?</string>
+    <string name="confirm_password">Повторите пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="reset">Сбросить</string>
+    <string name="input_data">Введите данные</string>
+    <string name="name">Название</string>
+    <string name="description">Описание</string>
+    <string name="type">Тип</string>
 </resources>

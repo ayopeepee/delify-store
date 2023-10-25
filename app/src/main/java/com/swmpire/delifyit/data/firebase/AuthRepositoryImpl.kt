@@ -14,8 +14,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
 
     private val TAG = "AuthRepositoryImpl"
@@ -23,35 +22,34 @@ class AuthRepositoryImpl @Inject constructor(
     override val currentStore: FirebaseUser?
         get() = firebaseAuth.currentUser
 
-    override suspend fun firebaseSignUp(store: StoreModel): Flow<NetworkResult<Boolean>> {
+    override suspend fun firebaseSignUp(
+        email: String,
+        password: String
+    ): Flow<NetworkResult<Boolean>> {
         return flow {
-
+            var isSuccess = false
             emit(NetworkResult.Loading())
 
             try {
-                val result =
-                    firebaseAuth.createUserWithEmailAndPassword(store.email, store.password).await()
-
-                if (result.user != null) {
-                    val firebaseStore = firebaseAuth.currentUser
-                    if (firebaseStore != null) {
-                        store.storeId = firebaseStore.uid
-                        firebaseFirestore
-                            .collection(Constants.STORES)
-                            .document(firebaseStore.uid)
-                            .set(store)
-                            .await()
-                        emit(NetworkResult.Success(true))
-                    } else {
-                        emit(NetworkResult.Error("something went wrong on creating new user (firestore)"))
-                    }
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        isSuccess = if (task.isSuccessful) {
+                            Log.d(TAG, "firebaseSignUp: success")
+                            currentStore != null
+                        } else {
+                            Log.e(TAG, "firebaseSignUp: fail", task.exception)
+                            false
+                        }
+                    }.await()
+                if (isSuccess) {
+                    emit(NetworkResult.Success(true))
                 } else {
-                    emit(NetworkResult.Error("something went wrong on creating new user (auth)"))
+                    emit(NetworkResult.Error("something went wrong"))
                 }
+
             } catch (e: Exception) {
-                emit(
-                    NetworkResult.Error(message = e.localizedMessage ?: "something went wrong")
-                )
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+
             }
         }
     }
@@ -60,7 +58,6 @@ class AuthRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ): Flow<NetworkResult<Boolean>> {
-        // TODO: change the firebase call like in firebaseSignUp so the race condition doesn't appear!!!
         return flow {
             var isSuccess = false
 
@@ -86,6 +83,36 @@ class AuthRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
             }
+        }
+    }
+
+    override suspend fun firebaseResetPassword(email: String): Flow<NetworkResult<Boolean>> {
+        return flow {
+            var isSuccess = false
+
+            emit(NetworkResult.Loading())
+
+            try {
+                firebaseAuth.sendPasswordResetEmail(email)
+                    .addOnCompleteListener { task ->
+                        isSuccess = if (task.isSuccessful) {
+                            Log.d(TAG, "firebaseResetPassword: success")
+                            true
+                        } else {
+                            Log.e(TAG, "firebaseResetPassword: fail", task.exception)
+                            false
+                        }
+                    }.await()
+
+                if (isSuccess) {
+                    emit(NetworkResult.Success(true))
+                } else {
+                    emit(NetworkResult.Error("something went wrong"))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+
         }
     }
 

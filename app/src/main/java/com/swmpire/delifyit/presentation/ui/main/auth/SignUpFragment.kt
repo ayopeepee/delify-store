@@ -1,6 +1,7 @@
 package com.swmpire.delifyit.presentation.ui.main.auth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,12 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.databinding.FragmentSignUpBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordValidator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -35,22 +42,26 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        subscribeToTextObservers()
+
         with(binding) {
             buttonNext.setOnClickListener {
-                val email = textInputEmail.text.toString().trim()
-                val password = textInputPassword.text.toString().trim()
 
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    signUpViewModel.signUpStore(StoreModel(
-                        email = email,
-                        password = password
-                    ))
-                } else {
-                    // TODO: need to replace toast with "error view"
-                    Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
+                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)
+                    && EmailValidator.validate(textInputEmail, layoutInputEmail)
+                    && PasswordConfirmValidator.validate(
+                        textInputPassword,
+                        textInputConfirmPassword,
+                        layoutConfirmPassword
+                    )
+                ) {
+                    signUpViewModel.signUpStore(
+                        email = textInputEmail.text.toString().trim(),
+                        password = textInputPassword.text.toString().trim()
+                    )
                 }
             }
-            buttonSignupToSignin.setOnClickListener{
+            textViewSignupToSignin.setOnClickListener {
                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
             }
         }
@@ -58,30 +69,75 @@ class SignUpFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signUpViewModel.signUpFlow.collect { result ->
-                    when(result) {
+                    when (result) {
                         is NetworkResult.Loading -> {
-                            // TODO: add progress indicator
-                            binding.buttonNext.isEnabled = false
-                        }
-                        is NetworkResult.Error -> {
-                            // TODO: need to replace toast with "error view"
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-                            binding.buttonNext.isEnabled = true
-                        }
-                        is NetworkResult.Success -> {
-                            binding.buttonNext.isEnabled = true
-                            if (result.data == true) {
-                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToTabsFragment())
-                            } else {
-                                Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
+                            with(binding) {
+                                progressHorizontal.visibility = View.VISIBLE
+                                buttonNext.isEnabled = false
+                                layoutInputPassword.error = null
+                                textViewError.visibility = View.GONE
                             }
                         }
+
+                        is NetworkResult.Error -> {
+                            binding.progressHorizontal.visibility = View.GONE
+                            binding.buttonNext.isEnabled = true
+                            when (result.message) {
+                                "The email address is already in use by another account." -> {
+                                    with(binding.textViewError) {
+                                        text = "Аккаунт с таким email уже существует"
+                                        visibility = View.VISIBLE
+                                    }
+                                }
+
+                                else -> {
+                                    with(binding.textViewError) {
+                                        text = "Произошла ошибка"
+                                        visibility = View.VISIBLE
+                                    }
+                                }
+                            }
+                        }
+
+                        is NetworkResult.Success -> {
+                            with(binding) {
+                                progressHorizontal.visibility = View.GONE
+                                textViewError.visibility = View.GONE
+                            }
+
+                            if (result.data == true) {
+                                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSetStoreInfoFragment())
+                            } else {
+                                with(binding) {
+                                    textViewError.text = "Произошла ошибка"
+                                    textViewError.visibility = View.VISIBLE
+                                    progressHorizontal.visibility = View.GONE
+                                }
+                            }
+                        }
+
                         is NetworkResult.Idle -> {}
                     }
                 }
             }
         }
 
+    }
+
+    private fun subscribeToTextObservers() {
+        PasswordTextChangeObserver(PasswordValidator).observe(
+            binding.textInputPassword,
+            binding.layoutInputPassword
+        )
+        EmailTextChangeObserver(EmailValidator).observe(
+            binding.textInputEmail,
+            binding.layoutInputEmail
+        )
+        PasswordConfirmTextChangeObserver(PasswordConfirmValidator).observe(
+            binding.textInputPassword,
+            binding.textInputConfirmPassword,
+            binding.layoutConfirmPassword
+        )
     }
 
     override fun onDestroyView() {

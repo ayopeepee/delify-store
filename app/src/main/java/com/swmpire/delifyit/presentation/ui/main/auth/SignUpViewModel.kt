@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val signUpStoreUseCase: SignUpStoreUseCase,
-    private val getFirebaseStoreUseCase: GetFirebaseStoreUseCase
+    private val signUpStoreUseCase: SignUpStoreUseCase
 ) : ViewModel() {
 
     private val _signUpFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
@@ -25,9 +24,9 @@ class SignUpViewModel @Inject constructor(
 
 
 
-    fun signUpStore(storeModel: StoreModel) {
+    fun signUpStore(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            signUpStoreUseCase.invoke(storeModel = storeModel).collect() { result ->
+            signUpStoreUseCase.invoke(email, password).collect() { result ->
                 _signUpFlow.value = result
             }
         }

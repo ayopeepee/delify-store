@@ -36,7 +36,7 @@ class ProfileFragment : Fragment() {
 
     private fun onSignOutButtonPressed() {
         profileViewModel.signOut()
-        findTopNavController().navigate(R.id.signInFragment, null, navOptions {
+        findTopNavController().navigate(R.id.signUpFragment, null, navOptions {
             popUpTo(R.id.tabsFragment) {
                 inclusive = true
             }
