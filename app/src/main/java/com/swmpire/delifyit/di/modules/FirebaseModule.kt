@@ -3,7 +3,9 @@ package com.swmpire.delifyit.di.modules
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swmpire.delifyit.data.firebase.AuthRepositoryImpl
+import com.swmpire.delifyit.data.firebase.FirestoreRepositoryImpl
 import com.swmpire.delifyit.domain.repository.AuthRepository
+import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,8 +29,13 @@ object FirebaseModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        firebaseAuth: FirebaseAuth,
+        firebaseAuth: FirebaseAuth
+    ) : AuthRepository = AuthRepositoryImpl(firebaseAuth = firebaseAuth)
+
+    @Provides
+    @Singleton
+    fun provideFirestoreRepository(
         firebaseFirestore: FirebaseFirestore
-    ) : AuthRepository = AuthRepositoryImpl(firebaseAuth = firebaseAuth, firebaseFirestore = firebaseFirestore)
+    ) : FirestoreRepository = FirestoreRepositoryImpl(firebaseFirestore = firebaseFirestore)
 
 }

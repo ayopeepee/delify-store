@@ -1,13 +1,12 @@
 package com.swmpire.delifyit.domain.model
 
 data class StoreModel(
-    var storeId: String? = null,
+    val storeId: String?,
+    @field:JvmField // cause of prefix "is"
     var isVerified: Boolean = false,
-    val email: String,
-    val password: String,
-    val name: String? = null,
-    val description: String? = null,
-    val type: String? = null,
+    val name: String,
+    val description: String,
+    val type: String,
     val address: String? = null,
     val location: LocationModel? = null
 )

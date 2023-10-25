@@ -24,9 +24,9 @@ class SignUpViewModel @Inject constructor(
 
 
 
-    fun signUpStore(storeModel: StoreModel) {
+    fun signUpStore(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            signUpStoreUseCase.invoke(storeModel = storeModel).collect() { result ->
+            signUpStoreUseCase.invoke(email, password).collect() { result ->
                 _signUpFlow.value = result
             }
         }

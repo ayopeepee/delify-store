@@ -9,7 +9,7 @@ interface AuthRepository {
 
     val currentStore : FirebaseUser?
 
-    suspend fun firebaseSignUp(store: StoreModel): Flow<NetworkResult<Boolean>>
+    suspend fun firebaseSignUp(email: String, password: String): Flow<NetworkResult<Boolean>>
 
     suspend fun firebaseSignIn(email: String, password: String): Flow<NetworkResult<Boolean>>
 

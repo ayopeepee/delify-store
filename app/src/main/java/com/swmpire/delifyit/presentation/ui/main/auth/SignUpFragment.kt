@@ -56,10 +56,8 @@ class SignUpFragment : Fragment() {
                     )
                 ) {
                     signUpViewModel.signUpStore(
-                        StoreModel(
-                            email = textInputEmail.text.toString().trim(),
-                            password = textInputPassword.text.toString().trim()
-                        )
+                        email = textInputEmail.text.toString().trim(),
+                        password = textInputPassword.text.toString().trim()
                     )
                 }
             }
@@ -73,7 +71,7 @@ class SignUpFragment : Fragment() {
                 signUpViewModel.signUpFlow.collect { result ->
                     when (result) {
                         is NetworkResult.Loading -> {
-                            with(binding){
+                            with(binding) {
                                 progressHorizontal.visibility = View.VISIBLE
                                 buttonNext.isEnabled = false
                                 layoutInputPassword.error = null
@@ -84,15 +82,16 @@ class SignUpFragment : Fragment() {
                         is NetworkResult.Error -> {
                             binding.progressHorizontal.visibility = View.GONE
                             binding.buttonNext.isEnabled = true
-                            when(result.message) {
+                            when (result.message) {
                                 "The email address is already in use by another account." -> {
-                                    with(binding.textViewError){
+                                    with(binding.textViewError) {
                                         text = "Аккаунт с таким email уже существует"
                                         visibility = View.VISIBLE
                                     }
                                 }
+
                                 else -> {
-                                    with(binding.textViewError){
+                                    with(binding.textViewError) {
                                         text = "Произошла ошибка"
                                         visibility = View.VISIBLE
                                     }
@@ -101,7 +100,7 @@ class SignUpFragment : Fragment() {
                         }
 
                         is NetworkResult.Success -> {
-                            with(binding){
+                            with(binding) {
                                 progressHorizontal.visibility = View.GONE
                                 textViewError.visibility = View.GONE
                             }
@@ -109,7 +108,7 @@ class SignUpFragment : Fragment() {
                             if (result.data == true) {
                                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSetStoreInfoFragment())
                             } else {
-                                with(binding){
+                                with(binding) {
                                     textViewError.text = "Произошла ошибка"
                                     textViewError.visibility = View.VISIBLE
                                     progressHorizontal.visibility = View.GONE
