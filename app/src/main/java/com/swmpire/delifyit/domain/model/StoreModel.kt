@@ -7,6 +7,5 @@ data class StoreModel(
     val name: String,
     val description: String,
     val type: String,
-    val address: String? = null,
-    val location: LocationModel? = null
+    val address: String
 )

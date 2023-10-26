@@ -47,10 +47,12 @@ class SetStoreInfoFragment : Fragment() {
                 // TODO: add validation
                 if (textInputName.text.toString().isNotBlank()
                     && textInputDescription.text.toString().isNotBlank()
+                    && textInputAddress.text.toString().isNotBlank()
                     && autoCompleteSelectType.text.toString().isNotBlank()) {
                     setStoreInfoViewModel.createStore(
                         textInputName.text.toString(),
                         textInputDescription.text.toString(),
+                        textInputAddress.text.toString(),
                         autoCompleteSelectType.text.toString())
                 }
             }

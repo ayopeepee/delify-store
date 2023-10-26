@@ -53,10 +53,26 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_input_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/layout_input_description"
+        app:layout_constraintEnd_toEndOf="@id/layout_input_description"
+        app:layout_constraintTop_toBottomOf="@id/layout_input_description"
+        android:hint="@string/address">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_select_type"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/layout_input_description"
+        app:layout_constraintTop_toBottomOf="@id/layout_input_address"
         app:layout_constraintStart_toStartOf="@id/layout_input_description"
         app:layout_constraintEnd_toEndOf="@id/layout_input_description"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
