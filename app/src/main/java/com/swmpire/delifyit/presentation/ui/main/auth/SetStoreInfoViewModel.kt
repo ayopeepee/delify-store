@@ -18,9 +18,9 @@ class SetStoreInfoViewModel @Inject constructor(
     private val _createStoreFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     val createStoreFlow: StateFlow<NetworkResult<Boolean>> get() = _createStoreFlow
 
-    fun createStore(name: String, description: String, type: String) {
+    fun createStore(name: String, description: String, address: String, type: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            createFirestoreStoreUseCase.invoke(name, description, type).collect() { result ->
+            createFirestoreStoreUseCase.invoke(name, description, address, type).collect() { result ->
                 _createStoreFlow.value = result
             }
         }
