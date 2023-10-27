@@ -14,19 +14,48 @@
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
         <action
-            android:id="@+id/action_signUpFragment_to_tabsFragment"
-            app:destination="@id/tabsFragment"
-            app:popUpTo="@id/signUpFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_signUpFragment_to_setStoreInfoFragment"
+            app:destination="@id/setStoreInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.auth.SignInFragment"
         android:label="fragment_sign_in"
-        tools:layout="@layout/fragment_sign_in" />
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment"
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_signInFragment_to_passwordResetFragment"
+            app:destination="@id/passwordResetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.TabsFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
+    <fragment
+        android:id="@+id/passwordResetFragment"
+        android:name="com.swmpire.delifyit.presentation.ui.main.auth.PasswordResetFragment"
+        android:label="fragment_password_reset"
+        tools:layout="@layout/fragment_password_reset" >
+        <action
+            android:id="@+id/action_passwordResetFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/passwordResetFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/setStoreInfoFragment"
+        android:name="com.swmpire.delifyit.presentation.ui.main.auth.SetStoreInfoFragment"
+        android:label="fragment_set_store_info"
+        tools:layout="@layout/fragment_set_store_info" >
+        <action
+            android:id="@+id/action_setStoreInfoFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment"
+            app:popUpTo="@id/setStoreInfoFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
