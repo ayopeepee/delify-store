@@ -1,5 +1,7 @@
 package com.swmpire.delifyit.domain.repository
 
+import com.google.firebase.auth.FirebaseUser
+import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
 import kotlinx.coroutines.flow.Flow
@@ -7,5 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface FirestoreRepository {
 
     suspend fun createStore(store: StoreModel) : Flow<NetworkResult<Boolean>>
-    suspend fun updateStore(store: StoreModel) : Flow<NetworkResult<Boolean>>
+    suspend fun updateStore(storeId: FirebaseUser) : Flow<NetworkResult<Boolean>>
+
+    suspend fun addItem(item: ItemModel) : Flow<NetworkResult<Boolean>>
 }

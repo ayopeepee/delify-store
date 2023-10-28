@@ -3,11 +3,8 @@ package com.swmpire.delifyit.data.firebase
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
 import com.swmpire.delifyit.domain.model.NetworkResult
-import com.swmpire.delifyit.domain.model.StoreModel
 import com.swmpire.delifyit.domain.repository.AuthRepository
-import com.swmpire.delifyit.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

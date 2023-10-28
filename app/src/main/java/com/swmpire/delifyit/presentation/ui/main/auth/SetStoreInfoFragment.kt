@@ -5,9 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,7 +16,6 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentSetStoreInfoBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,7 +35,7 @@ class SetStoreInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dropDownMenuAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_list_item, MenuItems.items)
+        val dropDownMenuAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_list_item_type, MenuItems.items)
         binding.autoCompleteSelectType.setAdapter(dropDownMenuAdapter)
 
         with(binding) {

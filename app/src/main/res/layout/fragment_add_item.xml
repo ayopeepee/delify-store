@@ -62,7 +62,7 @@
         android:hint="@string/price">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_address"
+            android:id="@+id/text_input_price"
             android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -79,7 +79,7 @@
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
-            android:id="@+id/auto_complete_select_type"
+            android:id="@+id/auto_complete_select_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
