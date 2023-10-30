@@ -13,7 +13,7 @@
     <string name="confirm_password">Повторите пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="reset">Сбросить</string>
-    <string name="input_data">Введите данные</string>
+    <string name="input_data">Заполните поля</string>
     <string name="name">Название</string>
     <string name="description">Описание</string>
     <string name="type">Тип</string>
@@ -21,4 +21,5 @@
     <string name="add">Добавить</string>
     <string name="price">Цена</string>
     <string name="category">Категория</string>
+    <string name="change">Изменить</string>
 </resources>

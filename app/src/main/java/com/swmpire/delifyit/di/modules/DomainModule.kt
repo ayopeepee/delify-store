@@ -1,6 +1,11 @@
 package com.swmpire.delifyit.di.modules
 
 import com.swmpire.delifyit.domain.repository.AuthRepository
+import com.swmpire.delifyit.domain.repository.FirestoreRepository
+import com.swmpire.delifyit.domain.repository.StorageRepository
+import com.swmpire.delifyit.domain.usecase.AddItemImageUseCase
+import com.swmpire.delifyit.domain.usecase.AddItemUseCase
+import com.swmpire.delifyit.domain.usecase.CreateFirestoreStoreUseCase
 import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreSignStatusUseCase
 import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignInStoreUseCase
@@ -34,4 +39,17 @@ object DomainModule {
     @Provides
     fun provideGetFirebaseStoreSignStatusUseCase(authRepository: AuthRepository) =
         GetFirebaseStoreSignStatusUseCase(authRepository)
+
+    @Provides
+    fun provideCreateFirestoreStoreUseCase(firestoreRepository: FirestoreRepository) =
+        CreateFirestoreStoreUseCase(firestoreRepository)
+
+    @Provides
+    fun provideAddItemUseCase(firestoreRepository: FirestoreRepository) =
+        AddItemUseCase(firestoreRepository)
+
+    @Provides
+    fun provideAddItemImageUseCase(storageRepository: StorageRepository) =
+        AddItemImageUseCase(storageRepository)
+
 }

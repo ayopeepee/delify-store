@@ -3,10 +3,13 @@ package com.swmpire.delifyit.di.modules
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.swmpire.delifyit.data.firebase.AuthRepositoryImpl
 import com.swmpire.delifyit.data.firebase.FirestoreRepositoryImpl
+import com.swmpire.delifyit.data.firebase.StorageRepositoryImpl
 import com.swmpire.delifyit.domain.repository.AuthRepository
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
+import com.swmpire.delifyit.domain.repository.StorageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,21 +29,35 @@ object FirebaseModule {
     @Singleton
     fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
 
+    @Provides
+    @Singleton
+    fun provideFirebaseStorage() = FirebaseStorage.getInstance()
+
 
     @Provides
     @Singleton
     fun provideAuthRepository(
         firebaseAuth: FirebaseAuth
-    ) : AuthRepository = AuthRepositoryImpl(firebaseAuth = firebaseAuth)
+    ): AuthRepository = AuthRepositoryImpl(firebaseAuth = firebaseAuth)
 
     @Provides
     @Singleton
     fun provideFirestoreRepository(
         firebaseAuth: FirebaseAuth,
         firebaseFirestore: FirebaseFirestore
-    ) : FirestoreRepository = FirestoreRepositoryImpl(
+    ): FirestoreRepository = FirestoreRepositoryImpl(
         firebaseAuth = firebaseAuth,
         firebaseFirestore = firebaseFirestore
     )
 
+    @Provides
+    @Singleton
+    fun provideStorageRepository(
+        firebaseStorage: FirebaseStorage,
+        firebaseAuth: FirebaseAuth
+    ): StorageRepository =
+        StorageRepositoryImpl(
+            firebaseStorage = firebaseStorage,
+            firebaseAuth = firebaseAuth
+        )
 }
