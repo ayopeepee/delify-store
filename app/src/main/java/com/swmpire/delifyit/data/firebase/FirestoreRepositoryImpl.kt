@@ -1,8 +1,10 @@
 package com.swmpire.delifyit.data.firebase
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
@@ -57,6 +59,35 @@ class FirestoreRepositoryImpl @Inject constructor(
                         .add(item)
                         .await()
                     emit(NetworkResult.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
+    override suspend fun getAllItems(): Flow<NetworkResult<List<ItemModel>>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val storeReference =
+                        firebaseFirestore.collection(STORES).document(currentStore.uid)
+                    Log.d("TAG", "getAllItems(store reference): ${storeReference.path}")
+                    val querySnapshot = firebaseFirestore.collection(ITEMS)
+                        .whereEqualTo("storeReference", storeReference)
+                        .get()
+                        .await()
+                        .documents
+
+                    if (querySnapshot.isNotEmpty()) {
+                        emit(NetworkResult.Success(querySnapshot.mapNotNull { it.toObject<ItemModel>() }))
+                    } else {
+                        emit(NetworkResult.Error("nothing to show"))
+                    }
+                } else {
+                    emit(NetworkResult.Error("user not logged in"))
                 }
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))

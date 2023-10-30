@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/image_view_item"
             android:layout_width="match_parent"
             android:layout_height="194dp"
             android:scaleType="centerCrop"
@@ -24,12 +25,14 @@
             android:padding="@dimen/medium_small_margin">
 
             <TextView
+                android:id="@+id/text_view_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Сухарики 3 Корочки"
                 android:textAppearance="?attr/textAppearanceTitleMedium"/>
 
             <TextView
+                android:id="@+id/text_view_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
@@ -53,6 +56,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button_change_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/change"

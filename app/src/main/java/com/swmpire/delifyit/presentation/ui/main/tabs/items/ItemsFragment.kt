@@ -1,18 +1,28 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.items
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentItemsBinding
+import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.ItemsTabListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ItemsFragment : Fragment() {
 
+    private val itemsViewModel: ItemsViewModel by viewModels()
     private var _binding: FragmentItemsBinding? = null
     private val binding get() = _binding!!
     override fun onCreateView(
@@ -25,10 +35,33 @@ class ItemsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonAddItem.setOnClickListener {
-            findNavController().navigate(ItemsFragmentDirections.actionItemsFragmentToAddItemFragment())
+        val adapter = ItemsTabListAdapter()
+        with(binding) {
+            buttonAddItem.setOnClickListener {
+                findNavController().navigate(ItemsFragmentDirections.actionItemsFragmentToAddItemFragment())
+            }
+            recyclerViewItems.adapter = adapter
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                itemsViewModel.itemsFlow.collect() { result ->
+                    when (result) {
+                        is NetworkResult.Loading -> {}
+                        is NetworkResult.Success -> {
+                            if (result.data != null) {
+                                Log.d("TAG", "onViewCreated: ${result.data}")
+                                adapter.submitData(result.data)
+                            }
+                        }
+
+                        is NetworkResult.Error -> {}
+                        is NetworkResult.Idle -> {}
+                    }
+                }
+            }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
