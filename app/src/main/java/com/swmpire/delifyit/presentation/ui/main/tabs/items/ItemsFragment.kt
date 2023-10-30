@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentItemsBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
@@ -41,6 +42,7 @@ class ItemsFragment : Fragment() {
                 findNavController().navigate(ItemsFragmentDirections.actionItemsFragmentToAddItemFragment())
             }
             recyclerViewItems.adapter = adapter
+            recyclerViewItems.layoutManager = GridLayoutManager(requireContext(), 2)
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
