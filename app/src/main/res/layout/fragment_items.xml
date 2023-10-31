@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.ui.main.tabs.items.ItemsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.skydoves.androidveil.VeilRecyclerFrameView
         android:id="@+id/recycler_view_items"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,8 +14,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:clipToPadding="false"
-        android:orientation="vertical"
+        app:veilFrame_baseAlpha="0.6"
+        app:veilFrame_baseColor="@color/gray"
+        app:veilFrame_highlightAlpha="0.8"
+        app:veilFrame_highlightColor="@color/light_gray"
+        app:veilFrame_layout="@layout/items_list_item"
+        app:veilFrame_radius="16dp"
+        app:veilFrame_shimmerEnable="true"
+        app:veilFrame_veiled="true"
         tools:listitem="@layout/items_list_item"/>
     
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

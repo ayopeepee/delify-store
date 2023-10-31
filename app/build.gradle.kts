@@ -80,4 +80,7 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    // Shimmer
+    implementation("com.github.skydoves:androidveil:1.1.3")
+
 }

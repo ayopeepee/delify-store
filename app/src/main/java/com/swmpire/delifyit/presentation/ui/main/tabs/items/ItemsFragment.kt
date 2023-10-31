@@ -41,18 +41,22 @@ class ItemsFragment : Fragment() {
             buttonAddItem.setOnClickListener {
                 findNavController().navigate(ItemsFragmentDirections.actionItemsFragmentToAddItemFragment())
             }
-            recyclerViewItems.adapter = adapter
-            recyclerViewItems.layoutManager = GridLayoutManager(requireContext(), 2)
+            recyclerViewItems.setAdapter(adapter)
+            recyclerViewItems.setLayoutManager(GridLayoutManager(requireContext(), 2))
+            recyclerViewItems.addVeiledItems(4)
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 itemsViewModel.itemsFlow.collect() { result ->
                     when (result) {
-                        is NetworkResult.Loading -> {}
+                        is NetworkResult.Loading -> {
+                            binding.recyclerViewItems.veil()
+                        }
                         is NetworkResult.Success -> {
                             if (result.data != null) {
                                 Log.d("TAG", "onViewCreated: ${result.data}")
                                 adapter.submitData(result.data)
+                                binding.recyclerViewItems.unVeil()
                             }
                         }
 
