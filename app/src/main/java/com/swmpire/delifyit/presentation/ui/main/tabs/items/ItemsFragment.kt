@@ -43,7 +43,11 @@ class ItemsFragment : Fragment() {
             }
             recyclerViewItems.setAdapter(adapter)
             recyclerViewItems.setLayoutManager(GridLayoutManager(requireContext(), 2))
-            recyclerViewItems.addVeiledItems(4)
+            recyclerViewItems.addVeiledItems(6)
+
+            swipeRefresh.setOnRefreshListener {
+                itemsViewModel.getAllItems()
+            }
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -57,6 +61,7 @@ class ItemsFragment : Fragment() {
                                 Log.d("TAG", "onViewCreated: ${result.data}")
                                 adapter.submitData(result.data)
                                 binding.recyclerViewItems.unVeil()
+                                binding.swipeRefresh.isRefreshing = false
                             }
                         }
 

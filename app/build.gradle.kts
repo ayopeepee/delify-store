@@ -83,4 +83,7 @@ dependencies {
     // Shimmer
     implementation("com.github.skydoves:androidveil:1.1.3")
 
+    // Swipe to refresh
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
 }

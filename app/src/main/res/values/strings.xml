@@ -22,4 +22,5 @@
     <string name="price">Цена</string>
     <string name="category">Категория</string>
     <string name="change">Изменить</string>
+    <string name="price_tenge">%d ₸</string>
 </resources>

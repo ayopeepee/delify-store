@@ -31,6 +31,7 @@ class ItemsTabListAdapter : RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabVie
 
             textViewName.text = item.name
             textViewDescription.text = item.description
+            textViewPrice.text = holder.itemView.context.getString(R.string.price_tenge, item.price)
         }
     }
     class ItemsTabViewHolder(var binding: ItemsListItemBinding) :
