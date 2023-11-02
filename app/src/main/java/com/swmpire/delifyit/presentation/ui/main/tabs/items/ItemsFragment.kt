@@ -51,22 +51,27 @@ class ItemsFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                itemsViewModel.itemsFlow.collect() { result ->
-                    when (result) {
-                        is NetworkResult.Loading -> {
-                            binding.recyclerViewItems.veil()
-                        }
-                        is NetworkResult.Success -> {
-                            if (result.data != null) {
-                                Log.d("TAG", "onViewCreated: ${result.data}")
-                                adapter.submitData(result.data)
-                                binding.recyclerViewItems.unVeil()
-                                binding.swipeRefresh.isRefreshing = false
+                launch {
+                    itemsViewModel.itemsFlow.collect() { result ->
+                        when (result) {
+                            is NetworkResult.Loading -> {
+                                binding.recyclerViewItems.veil()
                             }
-                        }
+                            is NetworkResult.Success -> {
+                                if (result.data != null) {
+                                    binding.recyclerViewItems.unVeil()
+                                    binding.swipeRefresh.isRefreshing = false
+                                }
+                            }
 
-                        is NetworkResult.Error -> {}
-                        is NetworkResult.Idle -> {}
+                            is NetworkResult.Error -> { TODO("observe state") }
+                            is NetworkResult.Idle -> {}
+                        }
+                    }
+                }
+                launch {
+                    itemsViewModel.itemsCallbackFlow.collect { result ->
+                        adapter.submitData(result)
                     }
                 }
             }

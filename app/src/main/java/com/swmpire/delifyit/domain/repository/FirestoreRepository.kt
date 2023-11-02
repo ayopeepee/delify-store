@@ -10,7 +10,7 @@ interface FirestoreRepository {
 
     suspend fun createStore(store: StoreModel) : Flow<NetworkResult<Boolean>>
     suspend fun updateStore(storeId: FirebaseUser) : Flow<NetworkResult<Boolean>>
-
     suspend fun addItem(item: ItemModel) : Flow<NetworkResult<Boolean>>
     suspend fun getAllItems() : Flow<NetworkResult<List<ItemModel>>>
+    fun getItemsCallback() : Flow<List<ItemModel>>
 }

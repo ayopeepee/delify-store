@@ -5,12 +5,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
 import com.swmpire.delifyit.domain.repository.AuthRepository
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
@@ -78,7 +81,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                         firebaseFirestore.collection(STORES).document(currentStore.uid)
                     Log.d("TAG", "getAllItems(store reference): ${storeReference.path}")
                     val querySnapshot = firebaseFirestore.collection(ITEMS)
-                        .whereEqualTo("storeReference", storeReference)
+                        .whereEqualTo(STORE_REFERENCE, storeReference)
                         .get()
                         .await()
                         .documents
@@ -97,8 +100,28 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getItemsCallback(): Flow<List<ItemModel>> {
+        return callbackFlow {
+            val currentStore = firebaseAuth.currentUser
+            if (currentStore != null) {
+                val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                val listener = firebaseFirestore.collection(ITEMS)
+                    .whereEqualTo(STORE_REFERENCE, storeReference)
+                    .addSnapshotListener { value, error ->
+                        if (error != null) close(error)
+                        if (value != null) {
+                            Log.d("TAG", "getItemsCallback: $value")
+                            trySend(value.toObjects<ItemModel>())
+                        }
+                }
+                awaitClose { listener.remove() }
+            }
+        }
+    }
+
     companion object Constants {
         const val STORES = "stores"
         const val ITEMS = "items"
+        const val STORE_REFERENCE = "storeReference"
     }
 }

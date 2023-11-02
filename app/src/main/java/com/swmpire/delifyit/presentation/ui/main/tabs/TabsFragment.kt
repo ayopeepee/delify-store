@@ -1,18 +1,10 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs
 
-import android.content.Context
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsCompat.toWindowInsetsCompat
-import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavHost
 import androidx.navigation.ui.NavigationUI
