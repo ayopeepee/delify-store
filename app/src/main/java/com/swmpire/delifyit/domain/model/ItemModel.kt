@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.firestore.DocumentReference
 
 data class ItemModel(
+    var id: String? = null,
     val name: String? = null,
     val description: String? = null,
     val category: String? = null,

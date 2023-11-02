@@ -18,5 +18,14 @@
         android:id="@+id/addItemFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.items.AddItemFragment"
         android:label="fragment_add_item"
-        tools:layout="@layout/fragment_add_item" />
+        tools:layout="@layout/fragment_add_item" >
+        <action
+            android:id="@+id/action_addItemFragment_to_changeItemFragment"
+            app:destination="@id/changeItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeItemFragment"
+        android:name="com.swmpire.delifyit.presentation.ui.main.tabs.items.ChangeItemFragment"
+        android:label="fragment_change_item"
+        tools:layout="@layout/fragment_change_item" />
 </navigation>

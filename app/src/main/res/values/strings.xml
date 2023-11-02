@@ -23,4 +23,6 @@
     <string name="category">Категория</string>
     <string name="change">Изменить</string>
     <string name="price_tenge">%d ₸</string>
+    <string name="cancel">Отменить</string>
+    <string name="save">Сохранить</string>
 </resources>

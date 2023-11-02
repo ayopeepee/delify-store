@@ -13,6 +13,7 @@ import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 
 class FirestoreRepositoryImpl @Inject constructor(
@@ -51,6 +52,7 @@ class FirestoreRepositoryImpl @Inject constructor(
             try {
                 val currentStore = firebaseAuth.currentUser
                 if (currentStore != null) {
+                    item.id = UUID.randomUUID().toString()
                     item.storeReference = firebaseFirestore
                         .collection(STORES)
                         .document(currentStore.uid)
