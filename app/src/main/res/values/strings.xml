@@ -25,4 +25,7 @@
     <string name="price_tenge">%d ₸</string>
     <string name="cancel">Отменить</string>
     <string name="save">Сохранить</string>
+    <string name="approvement">Подтверждение</string>
+    <string name="changes_discard">Все внесенные изменения не сохранятся</string>
+    <string name="accept">Принять</string>
 </resources>

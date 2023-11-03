@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentChangeItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
@@ -71,7 +72,7 @@ class ChangeItemFragment : Fragment() {
             textInputDescription.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
             textInputPrice.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
             autoCompleteSelectCategory.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
-
+            // TODO: add validation
             buttonSave.setOnClickListener {
                 changeItemViewModel.updateItem(ItemModel(
                     id = argsItem.item.id,
@@ -83,7 +84,18 @@ class ChangeItemFragment : Fragment() {
                 ))
             }
             buttonCancel.setOnClickListener {
-                findNavController().popBackStack()
+                if (buttonSave.isEnabled) {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(resources.getString(R.string.approvement))
+                        .setMessage(resources.getString(R.string.changes_discard))
+                        .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+                        .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
+                            findNavController().popBackStack()
+                        }
+                        .show()
+                } else {
+                    findNavController().popBackStack()
+                }
             }
         }
         newImageUrl = argsItem.item.imageUrl
