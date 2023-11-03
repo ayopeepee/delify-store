@@ -15,9 +15,10 @@ import com.swmpire.delifyit.databinding.ItemsListItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsFragmentDirections
 
-class ItemsTabListAdapter(private val parentFragment: Fragment) :
+class ItemsTabListAdapter(private val parentFragment: Fragment, private val onCheckChanged: (selected: Int) -> Unit) :
     RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabViewHolder>() {
 
+    private var checkedItemsCount = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsTabViewHolder {
         val binding =
             ItemsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,20 +29,38 @@ class ItemsTabListAdapter(private val parentFragment: Fragment) :
 
     override fun onBindViewHolder(holder: ItemsTabViewHolder, position: Int) {
         val item = asyncListDiffer.currentList[position]
-        holder.binding.apply {
-            Glide.with(holder.itemView.context)
-                .load(item.imageUrl)
-                .placeholder(R.drawable.placeholder_image)
-                .into(imageViewItem)
+        with(holder.binding) {
+            apply {
+                Glide.with(holder.itemView.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(imageViewItem)
 
-            textViewName.text = item.name
-            textViewDescription.text = item.description
-            textViewPrice.text = holder.itemView.context.getString(R.string.price_tenge, item.price)
+                textViewName.text = item.name
+                textViewDescription.text = item.description
+                textViewPrice.text =
+                    holder.itemView.context.getString(R.string.price_tenge, item.price)
+            }
+            buttonChangeItem.setOnClickListener {
+                parentFragment.findNavController()
+                    .navigate(ItemsFragmentDirections.actionItemsFragmentToChangeItemFragment(item))
+            }
+            cardViewHolder.setOnLongClickListener {
+                if (cardViewHolder.isChecked) checkedItemsCount++
+                else checkedItemsCount--
+                cardViewHolder.isChecked = !cardViewHolder.isChecked
+                onCheckChanged(checkedItemsCount)
+                true
+            }
+            cardViewHolder.setOnClickListener {
+                if (cardViewHolder.isChecked) {
+                    cardViewHolder.isChecked = false
+                    checkedItemsCount--
+                    onCheckChanged(checkedItemsCount)
+                }
+            }
         }
-        holder.binding.buttonChangeItem.setOnClickListener {
-            parentFragment.findNavController()
-                .navigate(ItemsFragmentDirections.actionItemsFragmentToChangeItemFragment(item))
-        }
+
     }
 
     class ItemsTabViewHolder(var binding: ItemsListItemBinding) :
