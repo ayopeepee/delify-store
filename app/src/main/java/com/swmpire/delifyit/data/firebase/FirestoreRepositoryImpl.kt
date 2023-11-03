@@ -9,7 +9,6 @@ import com.google.firebase.firestore.toObjects
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
-import com.swmpire.delifyit.domain.repository.AuthRepository
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -55,13 +54,15 @@ class FirestoreRepositoryImpl @Inject constructor(
             try {
                 val currentStore = firebaseAuth.currentUser
                 if (currentStore != null) {
-                    item.id = UUID.randomUUID().toString()
+                    val id = UUID.randomUUID().toString()
+                    item.id = id
                     item.storeReference = firebaseFirestore
                         .collection(STORES)
                         .document(currentStore.uid)
                     firebaseFirestore
                         .collection(ITEMS)
-                        .add(item)
+                        .document(id)
+                        .set(item)
                         .await()
                     emit(NetworkResult.Success(true))
                 }
@@ -119,9 +120,44 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateItem(item: ItemModel): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val itemId = item.id
+                if (itemId != null) {
+                    val itemReference = firebaseFirestore.collection(ITEMS).document(itemId)
+                    val updates = mutableMapOf<String, Any>()
+                    with(item) {
+                        name?.let { updates[NAME] = it }
+                        description?.let { updates[DESCRIPTION] = it }
+                        category?.let { updates[CATEGORY] = it }
+                        price?.let { updates[PRICE] = it }
+                        imageUrl?.let { updates[IMAGE_URL] = it }
+                    }
+                    if (updates.isNotEmpty()) {
+                        itemReference.update(updates).await()
+                        emit(NetworkResult.Success(true))
+                    } else {
+                        emit(NetworkResult.Error("nothing to update"))
+                    }
+                } else {
+                    emit(NetworkResult.Error("id is null"))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
     companion object Constants {
         const val STORES = "stores"
         const val ITEMS = "items"
         const val STORE_REFERENCE = "storeReference"
+        const val NAME = "name"
+        const val DESCRIPTION = "description"
+        const val CATEGORY = "category"
+        const val PRICE = "price"
+        const val IMAGE_URL = "imageUrl"
     }
 }

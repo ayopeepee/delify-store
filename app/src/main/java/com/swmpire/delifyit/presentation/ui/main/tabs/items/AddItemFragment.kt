@@ -23,6 +23,7 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentAddItemBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.presentation.ui.main.auth.SetStoreInfoFragment
+import com.swmpire.delifyit.utils.CategoryTypes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ class AddItemFragment : Fragment() {
         val dropDownMenuAdapter = ArrayAdapter(
             requireContext(),
             R.layout.dropdown_menu_list_item_category,
-            MenuItems.items
+            CategoryTypes.types
         )
         binding.autoCompleteSelectCategory.setAdapter(dropDownMenuAdapter)
 
@@ -120,7 +121,7 @@ class AddItemFragment : Fragment() {
                     addItemViewModel.addItemImageFlow.collect() { result ->
                         when (result) {
                             is NetworkResult.Loading -> {
-
+                                // TODO: observe state
                             }
                             is NetworkResult.Success -> {
                                 selectedImageUrl = result.data
@@ -140,9 +141,5 @@ class AddItemFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object MenuItems {
-        val items = arrayOf("Еда", "Товар")
     }
 }

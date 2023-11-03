@@ -2,6 +2,9 @@ package com.swmpire.delifyit.presentation.ui.main.tabs.items.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,8 +13,10 @@ import com.google.protobuf.Internal.ListAdapter
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.ItemsListItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
+import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsFragmentDirections
 
-class ItemsTabListAdapter : RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabViewHolder>() {
+class ItemsTabListAdapter(private val parentFragment: Fragment) :
+    RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsTabViewHolder {
         val binding =
@@ -33,11 +38,17 @@ class ItemsTabListAdapter : RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabVie
             textViewDescription.text = item.description
             textViewPrice.text = holder.itemView.context.getString(R.string.price_tenge, item.price)
         }
+        holder.binding.buttonChangeItem.setOnClickListener {
+            parentFragment.findNavController()
+                .navigate(ItemsFragmentDirections.actionItemsFragmentToChangeItemFragment(item))
+        }
     }
+
     class ItemsTabViewHolder(var binding: ItemsListItemBinding) :
-            RecyclerView.ViewHolder(binding.root) {}
+        RecyclerView.ViewHolder(binding.root) {}
 
     fun submitData(data: List<ItemModel>) = asyncListDiffer.submitList(data)
+
     object ItemCallback : DiffUtil.ItemCallback<ItemModel>() {
         override fun areItemsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean =
             oldItem.name == newItem.name
@@ -45,5 +56,6 @@ class ItemsTabListAdapter : RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabVie
         override fun areContentsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean =
             oldItem == newItem
     }
+
     private val asyncListDiffer = AsyncListDiffer(this, ItemCallback)
 }

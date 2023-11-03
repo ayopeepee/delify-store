@@ -13,19 +13,22 @@
         <action
             android:id="@+id/action_itemsFragment_to_addItemFragment"
             app:destination="@id/addItemFragment" />
+        <action
+            android:id="@+id/action_itemsFragment_to_changeItemFragment"
+            app:destination="@id/changeItemFragment" />
     </fragment>
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.items.AddItemFragment"
         android:label="fragment_add_item"
-        tools:layout="@layout/fragment_add_item" >
-        <action
-            android:id="@+id/action_addItemFragment_to_changeItemFragment"
-            app:destination="@id/changeItemFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_add_item" />
     <fragment
         android:id="@+id/changeItemFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.items.ChangeItemFragment"
         android:label="fragment_change_item"
-        tools:layout="@layout/fragment_change_item" />
+        tools:layout="@layout/fragment_change_item" >
+        <argument
+            android:name="item"
+            app:argType="com.swmpire.delifyit.domain.model.ItemModel" />
+    </fragment>
 </navigation>

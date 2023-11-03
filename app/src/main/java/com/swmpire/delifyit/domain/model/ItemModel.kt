@@ -1,8 +1,11 @@
 package com.swmpire.delifyit.domain.model
 
-import android.net.Uri
+import android.os.Parcelable
 import com.google.firebase.firestore.DocumentReference
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class ItemModel(
     var id: String? = null,
     val name: String? = null,
@@ -10,5 +13,5 @@ data class ItemModel(
     val category: String? = null,
     val price: Int? = null,
     val imageUrl: String? = null,
-    var storeReference: DocumentReference? = null
-)
+    var storeReference: @RawValue DocumentReference? = null
+) : Parcelable

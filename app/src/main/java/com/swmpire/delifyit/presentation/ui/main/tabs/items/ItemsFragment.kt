@@ -36,7 +36,7 @@ class ItemsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ItemsTabListAdapter()
+        val adapter = ItemsTabListAdapter(this)
         with(binding) {
             buttonAddItem.setOnClickListener {
                 findNavController().navigate(ItemsFragmentDirections.actionItemsFragmentToAddItemFragment())
