@@ -7,6 +7,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.swmpire.delifyit.data.firebase.AuthRepositoryImpl
 import com.swmpire.delifyit.data.firebase.FirestoreRepositoryImpl
 import com.swmpire.delifyit.data.firebase.StorageRepositoryImpl
+import com.swmpire.delifyit.data.room.ItemDao
+import com.swmpire.delifyit.data.room.ItemDatabase
 import com.swmpire.delifyit.domain.repository.AuthRepository
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import com.swmpire.delifyit.domain.repository.StorageRepository
@@ -44,10 +46,12 @@ object FirebaseModule {
     @Singleton
     fun provideFirestoreRepository(
         firebaseAuth: FirebaseAuth,
-        firebaseFirestore: FirebaseFirestore
+        firebaseFirestore: FirebaseFirestore,
+        itemDao: ItemDao
     ): FirestoreRepository = FirestoreRepositoryImpl(
         firebaseAuth = firebaseAuth,
-        firebaseFirestore = firebaseFirestore
+        firebaseFirestore = firebaseFirestore,
+        itemDao = itemDao
     )
 
     @Provides

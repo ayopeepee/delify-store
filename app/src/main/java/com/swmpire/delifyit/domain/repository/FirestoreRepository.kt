@@ -14,4 +14,5 @@ interface FirestoreRepository {
     suspend fun getAllItems() : Flow<NetworkResult<List<ItemModel>>>
     fun getItemsCallback() : Flow<List<ItemModel>>
     suspend fun updateItem(item: ItemModel) : Flow<NetworkResult<Boolean>>
+    suspend fun deleteSelectedItems() : Flow<NetworkResult<Boolean>>
 }

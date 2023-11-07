@@ -28,4 +28,9 @@
     <string name="approvement">Подтверждение</string>
     <string name="changes_discard">Все внесенные изменения не сохранятся</string>
     <string name="accept">Принять</string>
+    <string name="search">Поиск</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_confirm">Вы действительно хотитие удалить этот товар?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>

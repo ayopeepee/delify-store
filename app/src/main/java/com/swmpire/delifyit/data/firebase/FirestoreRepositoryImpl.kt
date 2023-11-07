@@ -6,21 +6,27 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
+import com.swmpire.delifyit.data.mapper.EntityMapperImpl
+import com.swmpire.delifyit.data.room.ItemDao
+import com.swmpire.delifyit.data.room.ItemDatabase
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 import javax.inject.Inject
 
 class FirestoreRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseFirestore: FirebaseFirestore,
+    private val itemDao: ItemDao
 ) : FirestoreRepository {
     override suspend fun createStore(store: StoreModel): Flow<NetworkResult<Boolean>> {
         return flow {
@@ -88,7 +94,9 @@ class FirestoreRepositoryImpl @Inject constructor(
                         .documents
 
                     if (querySnapshot.isNotEmpty()) {
-                        emit(NetworkResult.Success(querySnapshot.mapNotNull { it.toObject<ItemModel>() }))
+                        val items = querySnapshot.mapNotNull { it.toObject<ItemModel>() }
+                        itemDao.insertItems(items = items.map { EntityMapperImpl.mapFromModelToEntity(it) })
+                        emit(NetworkResult.Success(items))
                     } else {
                         emit(NetworkResult.Error("nothing to show"))
                     }
@@ -111,7 +119,6 @@ class FirestoreRepositoryImpl @Inject constructor(
                     .addSnapshotListener { value, error ->
                         if (error != null) close(error)
                         if (value != null) {
-                            Log.d("TAG", "getItemsCallback: $value")
                             trySend(value.toObjects<ItemModel>())
                         }
                 }
@@ -144,6 +151,20 @@ class FirestoreRepositoryImpl @Inject constructor(
                 } else {
                     emit(NetworkResult.Error("id is null"))
                 }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
+    override suspend fun deleteSelectedItems(): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                itemDao.getSelectedItems().forEach { itemEntity ->  
+                    firebaseFirestore.collection(ITEMS).document(itemEntity.id).delete()
+                }
+                emit(NetworkResult.Success(true))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
             }

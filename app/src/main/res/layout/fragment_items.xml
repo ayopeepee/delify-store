@@ -11,22 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/top_app_bar_items_menu"
+                app:title="@string/items"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <com.skydoves.androidveil.VeilRecyclerFrameView
             android:id="@+id/recycler_view_items"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
             app:veilFrame_baseAlpha="0.4"
-
             app:veilFrame_highlightAlpha="0.4"
-
             app:veilFrame_layout="@layout/items_list_item"
             app:veilFrame_radius="16dp"
             app:veilFrame_shimmerEnable="true"
             app:veilFrame_veiled="true"
+
             tools:listitem="@layout/items_list_item" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

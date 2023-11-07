@@ -1,5 +1,6 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.items.utils
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -14,11 +15,11 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.ItemsListItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsFragmentDirections
+import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsViewModel
 
-class ItemsTabListAdapter(private val parentFragment: Fragment, private val onCheckChanged: (selected: Int) -> Unit) :
+class ItemsTabListAdapter(private val parentFragment: Fragment, private val itemsViewModel: ItemsViewModel) :
     RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabViewHolder>() {
 
-    private var checkedItemsCount = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsTabViewHolder {
         val binding =
             ItemsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -46,17 +47,31 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val onCh
                     .navigate(ItemsFragmentDirections.actionItemsFragmentToChangeItemFragment(item))
             }
             cardViewHolder.setOnLongClickListener {
-                if (cardViewHolder.isChecked) checkedItemsCount++
-                else checkedItemsCount--
-                cardViewHolder.isChecked = !cardViewHolder.isChecked
-                onCheckChanged(checkedItemsCount)
+                when(cardViewHolder.isChecked) {
+                    true -> {
+                        itemsViewModel.setIsSelected(item.id, false)
+                        cardViewHolder.isChecked = false
+                    }
+                    false -> {
+                        itemsViewModel.setIsSelected(item.id, true)
+                        cardViewHolder.isChecked = true
+                        isAnySelected = true
+                    }
+                }
                 true
             }
             cardViewHolder.setOnClickListener {
-                if (cardViewHolder.isChecked) {
-                    cardViewHolder.isChecked = false
-                    checkedItemsCount--
-                    onCheckChanged(checkedItemsCount)
+                when(cardViewHolder.isChecked) {
+                    true -> {
+                        cardViewHolder.isChecked = false
+                        itemsViewModel.setIsSelected(item.id, false)
+                    }
+                    false -> {
+                        if (isAnySelected) {
+                            cardViewHolder.isChecked = true
+                            itemsViewModel.setIsSelected(item.id, true)
+                        }
+                    }
                 }
             }
         }
@@ -70,11 +85,12 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val onCh
 
     object ItemCallback : DiffUtil.ItemCallback<ItemModel>() {
         override fun areItemsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean =
-            oldItem.name == newItem.name
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean =
             oldItem == newItem
     }
 
     private val asyncListDiffer = AsyncListDiffer(this, ItemCallback)
+    private var isAnySelected: Boolean = false
 }
