@@ -29,4 +29,10 @@ interface ItemDao {
 
     @Query("UPDATE items SET isSelected = 0")
     suspend fun deselectAllItems()
+
+    @Query("DELETE FROM items WHERE isSelected = 1")
+    suspend fun deleteAllSelectedItems()
+
+    @Query("DELETE FROM items")
+    suspend fun nukeTable()
 }

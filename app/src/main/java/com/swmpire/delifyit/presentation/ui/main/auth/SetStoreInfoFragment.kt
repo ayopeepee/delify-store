@@ -60,9 +60,10 @@ class SetStoreInfoFragment : Fragment() {
                 setStoreInfoViewModel.createStoreFlow.collect() {result ->
                     when (result) {
                         is NetworkResult.Loading -> {
-                            // TODO: add progress indicator
                             with(binding) {
                                 buttonNext.isEnabled = false
+                                progressHorizontal.visibility = View.VISIBLE
+                                textViewError.visibility = View.GONE
                             }
                         }
                         is NetworkResult.Success -> {
@@ -76,6 +77,8 @@ class SetStoreInfoFragment : Fragment() {
                         is NetworkResult.Error -> {
                             with(binding) {
                                 buttonNext.isEnabled = true
+                                progressHorizontal.visibility = View.GONE
+                                textViewError.visibility = View.VISIBLE
                             }
                             Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                         }

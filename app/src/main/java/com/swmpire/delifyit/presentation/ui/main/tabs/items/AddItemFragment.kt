@@ -89,9 +89,10 @@ class AddItemFragment : Fragment() {
                     addItemViewModel.addItemFlow.collect() { result ->
                         when (result) {
                             is NetworkResult.Loading -> {
-                                // TODO: add progress indicator
                                 with(binding) {
                                     buttonNext.isEnabled = false
+                                    progressHorizontal.visibility = View.VISIBLE
+                                    textViewError.visibility = View.GONE
                                 }
                             }
 
@@ -105,9 +106,10 @@ class AddItemFragment : Fragment() {
                             }
 
                             is NetworkResult.Error -> {
-                                // TODO: add error view
                                 with(binding) {
                                     buttonNext.isEnabled = true
+                                    progressHorizontal.visibility = View.GONE
+                                    textViewError.visibility = View.VISIBLE
                                 }
                                 Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
                                     .show()
@@ -121,13 +123,24 @@ class AddItemFragment : Fragment() {
                     addItemViewModel.addItemImageFlow.collect() { result ->
                         when (result) {
                             is NetworkResult.Loading -> {
-                                // TODO: observe state
+                                with(binding) {
+                                    progressHorizontal.visibility = View.VISIBLE
+                                    textViewError.visibility = View.GONE
+                                }
                             }
                             is NetworkResult.Success -> {
                                 selectedImageUrl = result.data
+                                with(binding) {
+                                    progressHorizontal.visibility = View.GONE
+                                    textViewError.visibility = View.GONE
+                                }
                                 Log.d("TAG", "Collected: ${result.data}")
                             }
                             is NetworkResult.Error -> {
+                                with(binding) {
+                                    progressHorizontal.visibility = View.GONE
+                                    textViewError.visibility = View.VISIBLE
+                                }
                                 Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                             }
                             is NetworkResult.Idle -> {}

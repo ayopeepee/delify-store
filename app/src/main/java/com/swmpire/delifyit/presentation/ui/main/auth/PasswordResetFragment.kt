@@ -49,14 +49,17 @@ class PasswordResetFragment : Fragment() {
                 passwordResetViewModel.resetPasswordFlow.collect() { result ->
                     when(result) {
                         is NetworkResult.Loading -> {
-                            // TODO: add progress indicator
                             with(binding){
                                 buttonReset.isEnabled = false
                                 textViewError.visibility = View.GONE
+                                progressHorizontal.visibility = View.VISIBLE
                             }
                         }
                         is NetworkResult.Error -> {
-                            binding.buttonReset.isEnabled = true
+                            with(binding) {
+                                buttonReset.isEnabled = true
+                                progressHorizontal.visibility = View.GONE
+                            }
                             Toast.makeText(requireContext(), "${result.message}", Toast.LENGTH_SHORT).show()
                         }
                         is NetworkResult.Success -> {

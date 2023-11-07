@@ -60,13 +60,19 @@ class SignInFragment : Fragment() {
                 signInViewModel.signInFlow.collect { result ->
                     when(result) {
                         is NetworkResult.Loading -> {
-                            // TODO: add progress indicator
-                            binding.buttonNext.isEnabled = false
+                            with(binding) {
+                                buttonNext.isEnabled = false
+                                progressHorizontal.visibility = View.VISIBLE
+                                textViewError.visibility = View.GONE
+                            }
                         }
                         is NetworkResult.Error -> {
-                            // TODO: need to replace toast with "error view"
                             Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-                            binding.buttonNext.isEnabled = true
+                            with(binding) {
+                                buttonNext.isEnabled = true
+                                progressHorizontal.visibility = View.GONE
+                                textViewError.visibility = View.VISIBLE
+                            }
                         }
                         is NetworkResult.Success -> {
                             binding.buttonNext.isEnabled = true

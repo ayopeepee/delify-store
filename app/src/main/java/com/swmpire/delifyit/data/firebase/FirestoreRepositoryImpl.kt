@@ -95,6 +95,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
                     if (querySnapshot.isNotEmpty()) {
                         val items = querySnapshot.mapNotNull { it.toObject<ItemModel>() }
+                        itemDao.nukeTable()
                         itemDao.insertItems(items = items.map { EntityMapperImpl.mapFromModelToEntity(it) })
                         emit(NetworkResult.Success(items))
                     } else {
@@ -164,6 +165,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 itemDao.getSelectedItems().forEach { itemEntity ->  
                     firebaseFirestore.collection(ITEMS).document(itemEntity.id).delete()
                 }
+                itemDao.deleteAllSelectedItems()
                 emit(NetworkResult.Success(true))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))

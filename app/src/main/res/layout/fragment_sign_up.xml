@@ -7,6 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.main.auth.SignUpFragment">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_begin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_input_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"/>
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_horizontal"
         android:layout_width="match_parent"
@@ -23,7 +51,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Произошла ошибка"
         android:textAlignment="center"
         android:background="@color/error"
@@ -31,20 +59,25 @@
         android:visibility="gone"
         />
 
+    <TextView
+        android:id="@+id/text_view_input_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/input_data"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toTopOf="@id/guideline_horizontal_input_data"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_input_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
         android:hint="@string/email"
         app:endIconMode="clear_text"
         app:errorEnabled="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25">
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
+        app:layout_constraintTop_toTopOf="@id/guideline_horizontal_start">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_email"
@@ -58,13 +91,12 @@
         android:id="@+id/layout_input_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:hint="@string/password"
         app:counterEnabled="true"
         app:counterMaxLength="20"
         app:endIconMode="password_toggle"
-        app:layout_constraintEnd_toEndOf="@id/layout_input_email"
-        app:layout_constraintStart_toStartOf="@id/layout_input_email"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@+id/layout_input_email">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -84,8 +116,8 @@
         app:counterEnabled="true"
         app:counterMaxLength="20"
         app:layout_constraintTop_toBottomOf="@id/layout_input_password"
-        app:layout_constraintStart_toStartOf="@id/layout_input_password"
-        app:layout_constraintEnd_toEndOf="@id/layout_input_password">
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_confirm_password"
@@ -100,8 +132,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@+id/layout_confirm_password" />
 
     <TextView
@@ -114,7 +146,7 @@
         app:layout_constraintEnd_toStartOf="@+id/text_view_signup_to_signin"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@+id/button_next" />
 
     <TextView
@@ -125,7 +157,7 @@
         android:focusable="true"
         android:text="@string/sign_intext"
         android:textColor="@color/design_default_color_primary"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_view_already_have_an_account"
         app:layout_constraintTop_toTopOf="@+id/text_view_already_have_an_account" />
