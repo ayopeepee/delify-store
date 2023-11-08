@@ -1,16 +1,23 @@
 package com.swmpire.delifyit.di.modules
 
 import com.swmpire.delifyit.domain.repository.AuthRepository
+import com.swmpire.delifyit.domain.repository.DatabaseRepository
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import com.swmpire.delifyit.domain.repository.StorageRepository
 import com.swmpire.delifyit.domain.usecase.AddItemImageUseCase
 import com.swmpire.delifyit.domain.usecase.AddItemUseCase
 import com.swmpire.delifyit.domain.usecase.CreateFirestoreStoreUseCase
+import com.swmpire.delifyit.domain.usecase.DeleteSelectedItemsUseCase
+import com.swmpire.delifyit.domain.usecase.DeselectAllItemsUseCase
+import com.swmpire.delifyit.domain.usecase.GetAllItemsUseCase
+import com.swmpire.delifyit.domain.usecase.GetCallbackItemsUseCase
 import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreSignStatusUseCase
 import com.swmpire.delifyit.domain.usecase.GetFirebaseStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignInStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignOutStoreUseCase
 import com.swmpire.delifyit.domain.usecase.SignUpStoreUseCase
+import com.swmpire.delifyit.domain.usecase.UpdateItemUseCase
+import com.swmpire.delifyit.domain.usecase.UpdateSelectStatusUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,5 +58,29 @@ object DomainModule {
     @Provides
     fun provideAddItemImageUseCase(storageRepository: StorageRepository) =
         AddItemImageUseCase(storageRepository)
+
+    @Provides
+    fun provideDeleteSelectedItemsUseCase(firestoreRepository: FirestoreRepository) =
+        DeleteSelectedItemsUseCase(firestoreRepository)
+
+    @Provides
+    fun provideGetCallbackItemsUseCase(firestoreRepository: FirestoreRepository) =
+        GetCallbackItemsUseCase(firestoreRepository)
+
+    @Provides
+    fun provideGetAllItemsUseCase(firestoreRepository: FirestoreRepository) =
+        GetAllItemsUseCase(firestoreRepository)
+
+    @Provides
+    fun provideUpdateItemUseCase(firestoreRepository: FirestoreRepository) =
+        UpdateItemUseCase(firestoreRepository)
+
+    @Provides
+    fun provideUpdateSelectStatusUseCase(databaseRepository: DatabaseRepository) =
+        UpdateSelectStatusUseCase(databaseRepository)
+
+    @Provides
+    fun provideDeselectAllItemsUseCase(databaseRepository: DatabaseRepository) =
+        DeselectAllItemsUseCase(databaseRepository)
 
 }
