@@ -6,5 +6,6 @@ data class StoreModel(
     val name: String,
     val description: String,
     val type: String,
-    val address: String
+    val address: String,
+    val profilePictureUrl: String
 )

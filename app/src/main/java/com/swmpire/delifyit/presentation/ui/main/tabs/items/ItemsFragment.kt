@@ -95,7 +95,7 @@ class ItemsFragment : Fragment() {
                                 if (result.data != null) {
                                     binding.recyclerViewItems.unVeil()
                                     binding.swipeRefresh.isRefreshing = false
-                                    adapter.submitData(result.data)
+                                    //adapter.submitData(result.data)
                                 }
                             }
 
@@ -111,7 +111,8 @@ class ItemsFragment : Fragment() {
                 }
                 launch {
                     itemsViewModel.itemsCallbackFlow.collect { result ->
-                        //adapter.submitData(result)
+                        adapter.submitData(result)
+                        Log.d("TAG", "onViewCreated: submitted")
                     }
                 }
                 launch {
@@ -119,7 +120,7 @@ class ItemsFragment : Fragment() {
                         when(result) {
                             is NetworkResult.Loading -> {}
                             is NetworkResult.Success -> {
-                                itemsViewModel.getAllItems()
+
                             }
                             is NetworkResult.Error -> {
                                 Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()

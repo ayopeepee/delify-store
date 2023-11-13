@@ -45,8 +45,34 @@ class StorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun addProfileImage(uri: Uri): Flow<NetworkResult<String>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val reference = firebaseStorage.getReference(PROFILE)
+                        .child("${currentStore.uid}/${UUID.randomUUID()}")
+                    val uploadTask = reference.putFile(uri).await()
+                    val downloadUrl = uploadTask.metadata?.reference?.downloadUrl?.await()
+
+                    if (downloadUrl != null) {
+                        emit(NetworkResult.Success(downloadUrl.toString()))
+                    } else {
+                        emit(NetworkResult.Error("something went wrong while uploading image"))
+                    }
+                } else {
+                    emit(NetworkResult.Error("not logged in"))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
     companion object Constants {
         const val TAG = "StorageRepositoryImpl"
         const val IMAGES = "images"
+        const val PROFILE = "profile"
     }
 }

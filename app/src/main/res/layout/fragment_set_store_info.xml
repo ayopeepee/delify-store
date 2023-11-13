@@ -1,148 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO: wrap with [Scroll View] as in [fragment_add_item]-->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.ui.main.auth.SetStoreInfoFragment">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_begin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_input_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_horizontal_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2"/>
-
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_horizontal"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_view_error"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Произошла ошибка"
-        android:textAlignment="center"
-        android:background="@color/error"
-        android:padding="4dp"
-        android:visibility="gone" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_begin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05" />
 
-    <TextView
-        android:id="@+id/text_view_input_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/input_data"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintTop_toTopOf="@id/guideline_horizontal_input_data" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.95" />
 
-<!--  TODO: add circle image view as profile picture  -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_input_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_input_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintTop_toTopOf="@id/guideline_horizontal_start"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        android:hint="@string/name">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.2" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_horizontal_profile_image_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_input_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/layout_input_name"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        android:hint="@string/description">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_input_address"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintTop_toBottomOf="@id/layout_input_description"
-        android:hint="@string/address">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layout_select_type"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/layout_input_address"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-        <AutoCompleteTextView
-            android:id="@+id/auto_complete_select_type"
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:hint="@string/type"
-            />
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/text_view_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/error"
+            android:padding="4dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Произошла ошибка" />
 
-    <Button
-        android:id="@+id/button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"
-        app:layout_constraintTop_toBottomOf="@id/layout_select_type"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
+        <TextView
+            android:id="@+id/text_view_input_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/input_data"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toTopOf="@id/guideline_horizontal_input_data" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!--  TODO: add circle image view as profile picture  -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/circle_image_view_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/placeholder_image"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_profile_image_end"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toTopOf="@id/guideline_horizontal_start" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_input_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toTopOf="@id/guideline_horizontal_profile_image_end">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_input_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@id/layout_input_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_input_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@id/layout_input_description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_input_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_select_type"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@id/layout_input_address">
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_select_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/type"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintTop_toBottomOf="@id/layout_select_type" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

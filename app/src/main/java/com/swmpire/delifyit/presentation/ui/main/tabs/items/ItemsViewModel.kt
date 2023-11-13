@@ -41,6 +41,7 @@ class ItemsViewModel @Inject constructor(
 
     init {
         getAllItems()
+        getCallbackItems()
     }
     fun getAllItems() {
         viewModelScope.launch(Dispatchers.IO) {

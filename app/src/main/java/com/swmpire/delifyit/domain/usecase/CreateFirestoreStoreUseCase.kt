@@ -8,13 +8,14 @@ import javax.inject.Inject
 class CreateFirestoreStoreUseCase @Inject constructor(
     private val firestoreRepository: FirestoreRepository
 ) {
-    suspend operator fun invoke(name: String, description: String, address: String, type: String) =
+    suspend operator fun invoke(name: String, description: String, address: String, type: String, profilePictureUrl: String) =
         firestoreRepository.createStore(
             StoreModel(
                 name = name,
                 description = description,
                 type = type,
-                address = address
+                address = address,
+                profilePictureUrl = profilePictureUrl
             )
         )
 }

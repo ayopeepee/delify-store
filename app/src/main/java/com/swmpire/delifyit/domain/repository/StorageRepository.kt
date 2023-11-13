@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface StorageRepository {
     suspend fun addItemImage(uri: Uri) : Flow<NetworkResult<String>>
+    suspend fun addProfileImage(uri: Uri) : Flow<NetworkResult<String>>
 }
