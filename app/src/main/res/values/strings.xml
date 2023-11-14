@@ -33,4 +33,11 @@
     <string name="delete_confirm">Вы действительно хотитие удалить выбранные товары?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="edit">Изменить</string>
+    <string name="month">Месяц</string>
+    <string name="today">Сегодня</string>
+    <string name="year">Год</string>
+    <string name="total_orders">Заказов</string>
+    <string name="revenue">Выручка</string>
+    <string name="sign_out_confirm">Выйти из аккаунта?</string>
 </resources>

@@ -36,6 +36,7 @@ class FirestoreRepositoryImpl @Inject constructor(
             try {
                 val currentStore = firebaseAuth.currentUser
                 if (currentStore != null) {
+                    store.isVerified = false
                     firebaseFirestore
                         .collection(STORES)
                         .document(currentStore.uid)
@@ -96,7 +97,11 @@ class FirestoreRepositoryImpl @Inject constructor(
                     if (querySnapshot.isNotEmpty()) {
                         val items = querySnapshot.mapNotNull { it.toObject<ItemModel>() }
                         itemDao.nukeTable()
-                        itemDao.insertItems(items = items.map { EntityMapperImpl.mapFromModelToEntity(it) })
+                        itemDao.insertItems(items = items.map {
+                            EntityMapperImpl.mapFromModelToEntity(
+                                it
+                            )
+                        })
                         emit(NetworkResult.Success(items))
                     } else {
                         emit(NetworkResult.Error("nothing to show"))
@@ -122,7 +127,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                         if (value != null) {
                             trySend(value.toObjects<ItemModel>())
                         }
-                }
+                    }
                 awaitClose { listener.remove() }
             }
         }
@@ -162,11 +167,34 @@ class FirestoreRepositoryImpl @Inject constructor(
         return flow {
             emit(NetworkResult.Loading())
             try {
-                itemDao.getSelectedItems().forEach { itemEntity ->  
+                itemDao.getSelectedItems().forEach { itemEntity ->
                     firebaseFirestore.collection(ITEMS).document(itemEntity.id).delete()
                 }
                 itemDao.deleteAllSelectedItems()
                 emit(NetworkResult.Success(true))
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
+    override suspend fun getStore(): Flow<NetworkResult<StoreModel>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser?.uid
+                val snapshot = firebaseFirestore
+                    .collection(STORES)
+                    .document(currentStore.toString())
+                    .get()
+                    .await()
+
+                val store = snapshot.toObject<StoreModel>()
+                if (store != null) {
+                    emit(NetworkResult.Success(store))
+                } else {
+                    emit(NetworkResult.Error(message = "can't get store"))
+                }
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
             }
