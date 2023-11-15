@@ -87,7 +87,7 @@ class ChangeItemFragment : Fragment() {
             buttonCancel.setOnClickListener {
                 confirmCancel()
             }
-            toolbar.setOnClickListener {
+            toolbar.setNavigationOnClickListener {
                 confirmCancel()
             }
         }

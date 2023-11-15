@@ -19,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentAddItemBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
@@ -52,13 +53,14 @@ class AddItemFragment : Fragment() {
         )
         binding.autoCompleteSelectCategory.setAdapter(dropDownMenuAdapter)
 
-        val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            binding.imageViewItem.setImageURI(uri)
-            if (uri != null) {
-                addItemViewModel.addItemImage(uri)
-                Log.d("TAG", "onViewCreated: $uri")
+        val pickImage =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                binding.imageViewItem.setImageURI(uri)
+                if (uri != null) {
+                    addItemViewModel.addItemImage(uri)
+                    Log.d("TAG", "onViewCreated: $uri")
+                }
             }
-        }
 
         with(binding) {
             buttonNext.setOnClickListener {
@@ -80,6 +82,9 @@ class AddItemFragment : Fragment() {
             }
             cardViewImageWrapper.setOnClickListener {
                 pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
+            toolbar.setNavigationOnClickListener {
+                confirmCancel()
             }
         }
 
@@ -128,6 +133,7 @@ class AddItemFragment : Fragment() {
                                     textViewError.visibility = View.GONE
                                 }
                             }
+
                             is NetworkResult.Success -> {
                                 selectedImageUrl = result.data
                                 with(binding) {
@@ -136,19 +142,33 @@ class AddItemFragment : Fragment() {
                                 }
                                 Log.d("TAG", "Collected: ${result.data}")
                             }
+
                             is NetworkResult.Error -> {
                                 with(binding) {
                                     progressHorizontal.visibility = View.GONE
                                     textViewError.visibility = View.VISIBLE
                                 }
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
+
                             is NetworkResult.Idle -> {}
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun confirmCancel() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.approvement))
+            .setMessage(resources.getString(R.string.changes_discard))
+            .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
+                findNavController().popBackStack()
+            }
+            .show()
     }
 
     override fun onDestroyView() {
