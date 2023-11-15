@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentSetStoreInfoBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.utils.StoreTypes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -39,15 +40,20 @@ class SetStoreInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dropDownMenuAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_list_item_type, MenuItems.items)
+        val dropDownMenuAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.dropdown_menu_list_item_type,
+            StoreTypes.types)
+
         binding.autoCompleteSelectType.setAdapter(dropDownMenuAdapter)
 
-        val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            binding.circleImageViewProfile.setImageURI(uri)
-            if (uri != null) {
-                setStoreInfoViewModel.uploadProfilePicture(uri)
+        val pickImage =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                binding.circleImageViewProfile.setImageURI(uri)
+                if (uri != null) {
+                    setStoreInfoViewModel.uploadProfilePicture(uri)
+                }
             }
-        }
 
         with(binding) {
 
@@ -57,13 +63,15 @@ class SetStoreInfoFragment : Fragment() {
                     && textInputDescription.text.toString().isNotBlank()
                     && textInputAddress.text.toString().isNotBlank()
                     && autoCompleteSelectType.text.toString().isNotBlank()
-                    && !selectedImageUrl.isNullOrBlank()) {
+                    && !selectedImageUrl.isNullOrBlank()
+                ) {
                     setStoreInfoViewModel.createStore(
                         textInputName.text.toString(),
                         textInputDescription.text.toString(),
                         textInputAddress.text.toString(),
                         autoCompleteSelectType.text.toString(),
-                        selectedImageUrl.toString())
+                        selectedImageUrl.toString()
+                    )
                 }
             }
             circleImageViewProfile.setOnClickListener {
@@ -116,6 +124,7 @@ class SetStoreInfoFragment : Fragment() {
                                     textViewError.visibility = View.GONE
                                 }
                             }
+
                             is NetworkResult.Success -> {
                                 selectedImageUrl = result.data
                                 with(binding) {
@@ -124,13 +133,16 @@ class SetStoreInfoFragment : Fragment() {
                                 }
                                 Log.d("TAG", "Collected: ${result.data}")
                             }
+
                             is NetworkResult.Error -> {
                                 with(binding) {
                                     progressHorizontal.visibility = View.GONE
                                     textViewError.visibility = View.VISIBLE
                                 }
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
+
                             is NetworkResult.Idle -> {}
                         }
                     }
@@ -143,6 +155,7 @@ class SetStoreInfoFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     companion object MenuItems {
         val items = arrayOf("Заведение", "Магазин", "Другое")
     }

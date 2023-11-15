@@ -43,7 +43,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.45" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_vertical_profile_image_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.32"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_vertical_profile_image_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.68"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_horizontal"
@@ -77,15 +91,14 @@
             app:layout_constraintStart_toStartOf="@id/guideline_begin"
             app:layout_constraintTop_toTopOf="@id/guideline_horizontal_input_data" />
 
-        <!--  TODO: add circle image view as profile picture  -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circle_image_view_profile"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:src="@drawable/placeholder_image"
             app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal_profile_image_end"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintStart_toStartOf="@id/guideline_begin"
+            app:layout_constraintEnd_toEndOf="@id/guideline_vertical_profile_image_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_vertical_profile_image_start"
             app:layout_constraintTop_toTopOf="@id/guideline_horizontal_start" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -156,7 +169,7 @@
 
         <Button
             android:id="@+id/button_next"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/next"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"

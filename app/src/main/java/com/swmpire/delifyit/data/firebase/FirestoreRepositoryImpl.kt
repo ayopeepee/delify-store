@@ -201,6 +201,36 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateStore(store: StoreModel): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser?.uid
+                if (currentStore != null) {
+                    val storeReference = firebaseFirestore.collection(STORES).document(currentStore.toString())
+                    val updates = mutableMapOf<String, Any>()
+                    with(store) {
+                        name?.let { updates[NAME] = it }
+                        description?.let { updates[DESCRIPTION] = it }
+                        type?.let { updates[TYPE] = it }
+                        address?.let { updates[ADDRESS] = it }
+                        profilePictureUrl?.let { updates[PROFILE_PICTURE_URL] = it }
+                    }
+                    if (updates.isNotEmpty()) {
+                        storeReference.update(updates).await()
+                        emit(NetworkResult.Success(true))
+                    } else {
+                        emit(NetworkResult.Error("nothing to update"))
+                    }
+                } else {
+                    emit(NetworkResult.Error("id is null"))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "something went wrong"))
+            }
+        }
+    }
+
     companion object Constants {
         const val STORES = "stores"
         const val ITEMS = "items"
@@ -210,5 +240,8 @@ class FirestoreRepositoryImpl @Inject constructor(
         const val CATEGORY = "category"
         const val PRICE = "price"
         const val IMAGE_URL = "imageUrl"
+        const val TYPE = "type"
+        const val ADDRESS = "address"
+        const val PROFILE_PICTURE_URL = "profilePictureUrl"
     }
 }

@@ -23,7 +23,7 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentChangeItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
-import com.swmpire.delifyit.utils.CategoryTypes
+import com.swmpire.delifyit.utils.ItemCategory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,7 +48,7 @@ class ChangeItemFragment : Fragment() {
         val dropDownMenuAdapter = ArrayAdapter(
             requireContext(),
             R.layout.dropdown_menu_list_item_category,
-            CategoryTypes.types
+            ItemCategory.categories
         )
         binding.autoCompleteSelectCategory.setAdapter(dropDownMenuAdapter)
 

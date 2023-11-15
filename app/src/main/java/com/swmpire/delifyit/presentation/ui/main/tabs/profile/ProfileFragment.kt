@@ -41,9 +41,16 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            toolbar.menu.findItem(R.id.sign_out).setOnMenuItemClickListener {
-                onSignOutButtonPressed()
-                true
+            with(toolbar.menu){
+                findItem(R.id.sign_out).setOnMenuItemClickListener {
+                    onSignOutButtonPressed()
+                    true
+                }
+                findItem(R.id.edit).setOnMenuItemClickListener {
+                    findNavController()
+                        .navigate(ProfileFragmentDirections.actionProfileFragmentToUpdateStoreFragment())
+                    true
+                }
             }
 
             swipeRefresh.setOnRefreshListener {

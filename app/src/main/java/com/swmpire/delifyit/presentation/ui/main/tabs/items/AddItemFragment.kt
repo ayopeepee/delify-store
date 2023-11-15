@@ -1,16 +1,12 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.items
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,10 +19,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentAddItemBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
-import com.swmpire.delifyit.presentation.ui.main.auth.SetStoreInfoFragment
-import com.swmpire.delifyit.utils.CategoryTypes
+import com.swmpire.delifyit.utils.ItemCategory
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,7 +43,7 @@ class AddItemFragment : Fragment() {
         val dropDownMenuAdapter = ArrayAdapter(
             requireContext(),
             R.layout.dropdown_menu_list_item_category,
-            CategoryTypes.types
+            ItemCategory.categories
         )
         binding.autoCompleteSelectCategory.setAdapter(dropDownMenuAdapter)
 

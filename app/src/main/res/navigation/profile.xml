@@ -9,5 +9,14 @@
         android:id="@+id/profileFragment"
         android:name="com.swmpire.delifyit.presentation.ui.main.tabs.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_updateStoreFragment"
+            app:destination="@id/updateStoreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateStoreFragment"
+        android:name="com.swmpire.delifyit.presentation.ui.main.tabs.profile.UpdateStoreFragment"
+        android:label="fragment_update_store"
+        tools:layout="@layout/fragment_update_store" />
 </navigation>
