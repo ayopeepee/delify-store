@@ -64,6 +64,7 @@ class ChangeItemFragment : Fragment() {
             textInputDescription.setText(argsItem.item.description)
             textInputPrice.setText(argsItem.item.price.toString())
             autoCompleteSelectCategory.setText(argsItem.item.category, true)
+            toolbar.title = argsItem.item.name
 
             cardViewImageWrapper.setOnClickListener {
                 pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -84,18 +85,10 @@ class ChangeItemFragment : Fragment() {
                 ))
             }
             buttonCancel.setOnClickListener {
-                if (buttonSave.isEnabled) {
-                    MaterialAlertDialogBuilder(requireContext())
-                        .setTitle(resources.getString(R.string.approvement))
-                        .setMessage(resources.getString(R.string.changes_discard))
-                        .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
-                        .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
-                            findNavController().popBackStack()
-                        }
-                        .show()
-                } else {
-                    findNavController().popBackStack()
-                }
+                confirmCancel()
+            }
+            toolbar.setOnClickListener {
+                confirmCancel()
             }
         }
         newImageUrl = argsItem.item.imageUrl
@@ -170,6 +163,20 @@ class ChangeItemFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+    private fun confirmCancel() {
+        if (binding.buttonSave.isEnabled) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.approvement))
+                .setMessage(resources.getString(R.string.changes_discard))
+                .setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
+                    findNavController().popBackStack()
+                }
+                .show()
+        } else {
+            findNavController().popBackStack()
         }
     }
 
