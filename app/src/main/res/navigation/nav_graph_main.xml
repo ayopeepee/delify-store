@@ -12,10 +12,18 @@
         tools:layout="@layout/fragment_sign_up" >
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_signUpFragment_to_setStoreInfoFragment"
-            app:destination="@id/setStoreInfoFragment" />
+            app:destination="@id/setStoreInfoFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -25,11 +33,19 @@
         <action
             android:id="@+id/action_signInFragment_to_tabsFragment"
             app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_signInFragment_to_passwordResetFragment"
-            app:destination="@id/passwordResetFragment" />
+            app:destination="@id/passwordResetFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/tabsFragment"
@@ -44,6 +60,10 @@
         <action
             android:id="@+id/action_passwordResetFragment_to_signInFragment"
             app:destination="@id/signInFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
             app:popUpTo="@id/passwordResetFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -55,6 +75,10 @@
         <action
             android:id="@+id/action_setStoreInfoFragment_to_tabsFragment"
             app:destination="@id/tabsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
             app:popUpTo="@id/setStoreInfoFragment"
             app:popUpToInclusive="true" />
     </fragment>

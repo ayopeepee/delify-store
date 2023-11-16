@@ -12,10 +12,18 @@
         tools:layout="@layout/fragment_items" >
         <action
             android:id="@+id/action_itemsFragment_to_addItemFragment"
-            app:destination="@id/addItemFragment" />
+            app:destination="@id/addItemFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_itemsFragment_to_changeItemFragment"
-            app:destination="@id/changeItemFragment" />
+            app:destination="@id/changeItemFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/addItemFragment"
