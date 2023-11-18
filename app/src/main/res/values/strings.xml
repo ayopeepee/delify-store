@@ -41,4 +41,6 @@
     <string name="revenue">Выручка</string>
     <string name="sign_out_confirm">Выйти из аккаунта?</string>
     <string name="add_item">Добавить товар</string>
+    <string name="create_order">Создать заказ</string>
+    <string name="create_order_confirm">Добавить выбранные товары в заказ?</string>
 </resources>

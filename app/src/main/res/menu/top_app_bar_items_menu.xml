@@ -6,7 +6,14 @@
         android:id="@+id/search"
         android:title="@string/search"
         android:icon="@drawable/ic_search"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/create_order"
+        android:title="@string/create_order"
+        android:icon="@drawable/ic_create_order"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
 
     <item
         android:id="@+id/delete"

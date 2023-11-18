@@ -11,6 +11,7 @@ import com.swmpire.delifyit.data.room.ItemDao
 import com.swmpire.delifyit.data.room.ItemDatabase
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.domain.model.OrderModel
 import com.swmpire.delifyit.domain.model.StoreModel
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -51,9 +52,6 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateStore(storeId: FirebaseUser): Flow<NetworkResult<Boolean>> {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun addItem(item: ItemModel): Flow<NetworkResult<Boolean>> {
         return flow {
@@ -231,6 +229,32 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun createOrder(order: OrderModel): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val orderId = UUID.randomUUID().toString()
+                    order.id = orderId
+                    order.items = itemDao.getSelectedItems().associate { it.id to 1 }
+                    order.storeReference = firebaseFirestore
+                        .collection(STORES)
+                        .document(currentStore.uid)
+
+                    firebaseFirestore.collection(ORDERS)
+                        .document(orderId)
+                        .set(order)
+                        .await()
+
+                    emit(NetworkResult.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "can't create order"))
+            }
+        }
+    }
+
     companion object Constants {
         const val STORES = "stores"
         const val ITEMS = "items"
@@ -243,5 +267,6 @@ class FirestoreRepositoryImpl @Inject constructor(
         const val TYPE = "type"
         const val ADDRESS = "address"
         const val PROFILE_PICTURE_URL = "profilePictureUrl"
+        const val ORDERS = "orders"
     }
 }

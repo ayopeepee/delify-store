@@ -4,11 +4,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -58,10 +64,12 @@ class ItemsFragment : Fragment() {
             with(binding.toolbar) {
                 if (count > 0) {
                     menu.findItem(R.id.delete).isVisible = true
+                    menu.findItem(R.id.create_order).isVisible = true
                     title = count.toString()
                     navigationIcon = ContextCompat.getDrawable(context, R.drawable.ic_close)
                 } else {
                     menu.findItem(R.id.delete).isVisible = false
+                    menu.findItem(R.id.create_order).isVisible = false
                     title = resources.getString(R.string.items)
                     navigationIcon = null
                 }
@@ -78,6 +86,17 @@ class ItemsFragment : Fragment() {
                         }
                         .show()
 
+                    true
+                }
+                menu.findItem(R.id.create_order).setOnMenuItemClickListener {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(resources.getString(R.string.approvement))
+                        .setMessage(resources.getString(R.string.create_order_confirm))
+                        .setNegativeButton(resources.getString(R.string.no)) { _, _, -> }
+                        .setPositiveButton(resources.getString(R.string.yes)) { _, _, ->
+                            itemsViewModel.createOrder()
+                        }
+                        .show()
                     true
                 }
             }

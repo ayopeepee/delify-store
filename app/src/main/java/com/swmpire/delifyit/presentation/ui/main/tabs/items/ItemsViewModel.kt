@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.domain.usecase.CreateOrderUseCase
 import com.swmpire.delifyit.domain.usecase.DeleteSelectedItemsUseCase
 import com.swmpire.delifyit.domain.usecase.DeselectAllItemsUseCase
 import com.swmpire.delifyit.domain.usecase.GetAllItemsUseCase
@@ -28,16 +29,19 @@ class ItemsViewModel @Inject constructor(
     private val updateSelectStatusUseCase: UpdateSelectStatusUseCase,
     private val getSelectedItemsCountUseCase: GetSelectedItemsCountUseCase,
     private val deselectAllItemsUseCase: DeselectAllItemsUseCase,
-    private val deleteSelectedItemsUseCase: DeleteSelectedItemsUseCase
+    private val deleteSelectedItemsUseCase: DeleteSelectedItemsUseCase,
+    private val createOrderUseCase: CreateOrderUseCase
 ) : ViewModel() {
     private val _itemsFlow = MutableStateFlow<NetworkResult<List<ItemModel>>>(NetworkResult.Idle())
     private val _itemsCallbackFlow = MutableStateFlow<List<ItemModel>>(emptyList())
     private val _selectedItemsCount = MutableLiveData<Int>()
     private val _deleteSelectedItems = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
+    private val _createOrderFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     val itemsFlow: StateFlow<NetworkResult<List<ItemModel>>> get() = _itemsFlow
     val itemsCallbackFlow: StateFlow<List<ItemModel>> get() = _itemsCallbackFlow.asStateFlow()
     val selectedItemsCount: LiveData<Int> get() = _selectedItemsCount
     val deleteSelectedItems: StateFlow<NetworkResult<Boolean>> get() = _deleteSelectedItems
+    val createOrderFlow: StateFlow<NetworkResult<Boolean>> get() = _createOrderFlow
 
     init {
         getAllItems()
@@ -67,6 +71,13 @@ class ItemsViewModel @Inject constructor(
         viewModelScope.launch {
             deleteSelectedItemsUseCase.invoke().collect { result ->
                 _deleteSelectedItems.value = result
+            }
+        }
+    }
+    fun createOrder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            createOrderUseCase.invoke().collect { result ->
+                _createOrderFlow.value = result
             }
         }
     }
