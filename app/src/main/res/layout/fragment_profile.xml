@@ -146,6 +146,7 @@
             tools:text="Здесь и белки и булки"/>
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout_date_ranges"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:tabMode="fixed"

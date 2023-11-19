@@ -1,12 +1,16 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.profile
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
+import com.swmpire.delifyit.domain.uitl.TimeIntervals
 import com.swmpire.delifyit.domain.usecase.AddProfilePictureUseCase
 import com.swmpire.delifyit.domain.usecase.GetStoreUseCase
+import com.swmpire.delifyit.domain.usecase.GetTotalOrdersUseCase
 import com.swmpire.delifyit.domain.usecase.UpdateStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +31,7 @@ class UpdateStoreViewModel @Inject constructor(
     private val _updateStoreFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     private val _uploadProfilePictureFLow = MutableStateFlow<NetworkResult<String>>(NetworkResult.Idle())
     private val _getStoreFlow = MutableStateFlow<NetworkResult<StoreModel>>(NetworkResult.Idle())
-    val updateStoreFlow : StateFlow<NetworkResult<Boolean>> get() = _updateStoreFlow.asStateFlow()
+    val updateStoreFlow: StateFlow<NetworkResult<Boolean>> get() = _updateStoreFlow.asStateFlow()
     val uploadProfilePictureFlow: StateFlow<NetworkResult<String>> get() = _uploadProfilePictureFLow.asStateFlow()
     val getStoreFlow: StateFlow<NetworkResult<StoreModel>> get() = _getStoreFlow.asStateFlow()
 

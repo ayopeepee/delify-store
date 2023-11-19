@@ -11,5 +11,6 @@ data class OrderModel(
     @ServerTimestamp var createOrderDate: Date? = null,
     var readyOrderDate: Date? = null,
     var storeReference: DocumentReference? = null,
+    var price: Int? = null,
     var items: Map<String, Int>? = null
 )

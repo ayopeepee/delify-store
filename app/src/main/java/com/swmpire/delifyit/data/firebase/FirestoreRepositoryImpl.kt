@@ -1,30 +1,27 @@
 package com.swmpire.delifyit.data.firebase
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
-import com.swmpire.delifyit.data.firebase.utils.DateFilter
+import com.swmpire.delifyit.domain.uitl.DateFilter
 import com.swmpire.delifyit.data.mapper.EntityMapperImpl
 import com.swmpire.delifyit.data.room.ItemDao
-import com.swmpire.delifyit.data.room.ItemDatabase
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.OrderModel
 import com.swmpire.delifyit.domain.model.StoreModel
 import com.swmpire.delifyit.domain.repository.FirestoreRepository
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
@@ -209,7 +206,8 @@ class FirestoreRepositoryImpl @Inject constructor(
             try {
                 val currentStore = firebaseAuth.currentUser?.uid
                 if (currentStore != null) {
-                    val storeReference = firebaseFirestore.collection(STORES).document(currentStore.toString())
+                    val storeReference =
+                        firebaseFirestore.collection(STORES).document(currentStore.toString())
                     val updates = mutableMapOf<String, Any>()
                     with(store) {
                         name?.let { updates[NAME] = it }
@@ -240,8 +238,10 @@ class FirestoreRepositoryImpl @Inject constructor(
                 val currentStore = firebaseAuth.currentUser
                 if (currentStore != null) {
                     val orderId = UUID.randomUUID().toString()
+                    val items = itemDao.getSelectedItems()
                     order.id = orderId
-                    order.items = itemDao.getSelectedItems().associate { it.name.toString() to 1 }
+                    order.price = items.sumOf { it.price ?: 0 }
+                    order.items = items.associate { it.name.toString() to 1 }
                     order.storeReference = firebaseFirestore
                         .collection(STORES)
                         .document(currentStore.uid)
@@ -286,7 +286,8 @@ class FirestoreRepositoryImpl @Inject constructor(
             try {
                 val currentStore = firebaseAuth.currentUser
                 if (currentStore != null) {
-                    val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                    val storeReference =
+                        firebaseFirestore.collection(STORES).document(currentStore.uid)
                     val snapshot = firebaseFirestore.collection(ORDERS)
                         .whereEqualTo(STORE_REFERENCE, storeReference)
                         .get()
@@ -362,6 +363,52 @@ class FirestoreRepositoryImpl @Inject constructor(
                 }
             } catch (e: Exception) {
                 emit(NetworkResult.Error(message = e.localizedMessage ?: "can't place order"))
+            }
+        }
+    }
+
+    override suspend fun getTotalOrdersInRange(start: Timestamp, end: Timestamp): Flow<Long> {
+        return flow {
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val storeReference =
+                        firebaseFirestore.collection(STORES).document(currentStore.uid)
+                    val query = firebaseFirestore.collection(ORDERS)
+                        .whereEqualTo(STORE_REFERENCE, storeReference)
+                        .whereGreaterThanOrEqualTo(CREATE_ORDER_DATE, start)
+                        .whereLessThan(CREATE_ORDER_DATE, end)
+                        .count()
+                        .get(AggregateSource.SERVER)
+                        .await()
+
+                    emit(query.count)
+                }
+            } catch (e: Exception) {
+                emit(-1)
+            }
+        }
+    }
+
+    override suspend fun getTotalRevenueInRange(start: Timestamp, end: Timestamp): Flow<Int> {
+        return flow {
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                    val snapshot = firebaseFirestore.collection(ORDERS)
+                        .whereEqualTo(STORE_REFERENCE, storeReference)
+                        .whereGreaterThanOrEqualTo(CREATE_ORDER_DATE, start)
+                        .whereLessThan(CREATE_ORDER_DATE, end)
+                        .get()
+                        .await()
+                        .documents
+
+                    val revenue = snapshot.sumOf { it.toObject<OrderModel>()?.price ?: 0 }
+                    emit(revenue)
+                }
+            } catch (e: Exception) {
+                emit(-1)
             }
         }
     }

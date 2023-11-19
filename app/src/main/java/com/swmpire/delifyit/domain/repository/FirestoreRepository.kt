@@ -1,5 +1,6 @@
 package com.swmpire.delifyit.domain.repository
 
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
@@ -23,4 +24,6 @@ interface FirestoreRepository {
     suspend fun getItemById(id: String) : Flow<ItemModel?>
     suspend fun cancelOrder(id: String) : Flow<NetworkResult<Boolean>>
     suspend fun placeOrder(id: String) : Flow<NetworkResult<Boolean>>
+    suspend fun getTotalOrdersInRange(start: Timestamp, end: Timestamp) : Flow<Long>
+    suspend fun getTotalRevenueInRange(start: Timestamp, end: Timestamp) : Flow<Int>
 }
