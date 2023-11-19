@@ -43,4 +43,8 @@
     <string name="add_item">Добавить товар</string>
     <string name="create_order">Создать заказ</string>
     <string name="create_order_confirm">Добавить выбранные товары в заказ?</string>
+    <string name="decline">Отменить</string>
+    <string name="done">Готов</string>
+    <string name="quantity">Количество: %d</string>
+    <string name="order_id">Заказ №: %s</string>
 </resources>

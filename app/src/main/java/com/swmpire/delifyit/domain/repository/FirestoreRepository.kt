@@ -18,4 +18,9 @@ interface FirestoreRepository {
     suspend fun getStore() : Flow<NetworkResult<StoreModel>>
     suspend fun updateStore(store: StoreModel) : Flow<NetworkResult<Boolean>>
     suspend fun createOrder(order: OrderModel) : Flow<NetworkResult<Boolean>>
+    fun getOrdersCallback() : Flow<List<OrderModel>>
+    suspend fun getOrders() : Flow<NetworkResult<List<OrderModel>>>
+    suspend fun getItemById(id: String) : Flow<ItemModel?>
+    suspend fun cancelOrder(id: String) : Flow<NetworkResult<Boolean>>
+    suspend fun placeOrder(id: String) : Flow<NetworkResult<Boolean>>
 }

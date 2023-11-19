@@ -3,9 +3,12 @@ package com.swmpire.delifyit.data.firebase
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
+import com.swmpire.delifyit.data.firebase.utils.DateFilter
 import com.swmpire.delifyit.data.mapper.EntityMapperImpl
 import com.swmpire.delifyit.data.room.ItemDao
 import com.swmpire.delifyit.data.room.ItemDatabase
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 
@@ -237,7 +241,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 if (currentStore != null) {
                     val orderId = UUID.randomUUID().toString()
                     order.id = orderId
-                    order.items = itemDao.getSelectedItems().associate { it.id to 1 }
+                    order.items = itemDao.getSelectedItems().associate { it.name.toString() to 1 }
                     order.storeReference = firebaseFirestore
                         .collection(STORES)
                         .document(currentStore.uid)
@@ -255,6 +259,113 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getOrdersCallback(): Flow<List<OrderModel>> {
+        return callbackFlow {
+            val currentStore = firebaseAuth.currentUser
+            if (currentStore != null) {
+                val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                val listener = firebaseFirestore.collection(ORDERS)
+                    .whereEqualTo(STORE_REFERENCE, storeReference)
+                    .whereGreaterThanOrEqualTo(CREATE_ORDER_DATE, DateFilter.getStartOfDay())
+                    .whereLessThan(CREATE_ORDER_DATE, DateFilter.getStartOfNextDay())
+                    .orderBy(CREATE_ORDER_DATE, Query.Direction.DESCENDING)
+                    .addSnapshotListener { value, error ->
+                        if (error != null) close(error)
+                        if (value != null) {
+                            trySend(value.toObjects<OrderModel>())
+                        }
+                    }
+                awaitClose { listener.remove() }
+            }
+        }
+    }
+
+    override suspend fun getOrders(): Flow<NetworkResult<List<OrderModel>>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                    val snapshot = firebaseFirestore.collection(ORDERS)
+                        .whereEqualTo(STORE_REFERENCE, storeReference)
+                        .get()
+                        .await()
+                        .documents
+
+                    val orders = snapshot.mapNotNull { it.toObject<OrderModel>() }
+                    if (orders.isNotEmpty()) {
+                        emit(NetworkResult.Success(orders))
+                    } else {
+                        emit(NetworkResult.Error(message = "no orders"))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.localizedMessage ?: "can't get orders"))
+            }
+        }
+    }
+
+    override suspend fun getItemById(id: String): Flow<ItemModel?> {
+        return flow {
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    val snapshot = firebaseFirestore.collection(ITEMS)
+                        .document(id)
+                        .get()
+                        .await()
+
+                    emit(snapshot.toObject<ItemModel>())
+                }
+            } catch (e: Exception) {
+                emit(null)
+            }
+        }
+    }
+
+    override suspend fun cancelOrder(id: String): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    firebaseFirestore.collection(ORDERS)
+                        .document(id)
+                        .update(ORDER_STATUS, DECLINED)
+                        .await()
+                    emit(NetworkResult.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "can't decline order"))
+            }
+        }
+    }
+
+    override suspend fun placeOrder(id: String): Flow<NetworkResult<Boolean>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                val currentStore = firebaseAuth.currentUser
+                if (currentStore != null) {
+                    firebaseFirestore.collection(ORDERS)
+                        .document(id)
+                        .update(ORDER_STATUS, READY)
+                        .await()
+
+                    firebaseFirestore.collection(ORDERS)
+                        .document(id)
+                        .update(READY_ORDER_DATE, FieldValue.serverTimestamp())
+                        .await()
+
+                    emit(NetworkResult.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(message = e.localizedMessage ?: "can't place order"))
+            }
+        }
+    }
+
     companion object Constants {
         const val STORES = "stores"
         const val ITEMS = "items"
@@ -268,5 +379,11 @@ class FirestoreRepositoryImpl @Inject constructor(
         const val ADDRESS = "address"
         const val PROFILE_PICTURE_URL = "profilePictureUrl"
         const val ORDERS = "orders"
+        const val ID = "id"
+        const val ORDER_STATUS = "orderStatus"
+        const val READY = "Готов"
+        const val DECLINED = "Отменен"
+        const val READY_ORDER_DATE = "readyOrderDate"
+        const val CREATE_ORDER_DATE = "createOrderDate"
     }
 }
