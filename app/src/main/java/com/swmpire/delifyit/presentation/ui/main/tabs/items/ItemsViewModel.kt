@@ -1,5 +1,6 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.items
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.swmpire.delifyit.domain.usecase.DeselectAllItemsUseCase
 import com.swmpire.delifyit.domain.usecase.GetAllItemsUseCase
 import com.swmpire.delifyit.domain.usecase.GetCallbackItemsUseCase
 import com.swmpire.delifyit.domain.usecase.GetSelectedItemsCountUseCase
+import com.swmpire.delifyit.domain.usecase.IsItemSelectedUseCase
 import com.swmpire.delifyit.domain.usecase.UpdateSelectStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +30,7 @@ class ItemsViewModel @Inject constructor(
     private val getCallbackItemsUseCase: GetCallbackItemsUseCase,
     private val updateSelectStatusUseCase: UpdateSelectStatusUseCase,
     private val getSelectedItemsCountUseCase: GetSelectedItemsCountUseCase,
+    private val isItemSelectedUseCase: IsItemSelectedUseCase,
     private val deselectAllItemsUseCase: DeselectAllItemsUseCase,
     private val deleteSelectedItemsUseCase: DeleteSelectedItemsUseCase,
     private val createOrderUseCase: CreateOrderUseCase
@@ -35,11 +38,13 @@ class ItemsViewModel @Inject constructor(
     private val _itemsFlow = MutableStateFlow<NetworkResult<List<ItemModel>>>(NetworkResult.Idle())
     private val _itemsCallbackFlow = MutableStateFlow<List<ItemModel>>(emptyList())
     private val _selectedItemsCount = MutableLiveData<Int>()
+    private val _isSelected = MutableLiveData<Boolean>()
     private val _deleteSelectedItems = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     private val _createOrderFlow = MutableStateFlow<NetworkResult<Boolean>>(NetworkResult.Idle())
     val itemsFlow: StateFlow<NetworkResult<List<ItemModel>>> get() = _itemsFlow
     val itemsCallbackFlow: StateFlow<List<ItemModel>> get() = _itemsCallbackFlow.asStateFlow()
     val selectedItemsCount: LiveData<Int> get() = _selectedItemsCount
+    val isSelected: LiveData<Boolean> get() = _isSelected
     val deleteSelectedItems: StateFlow<NetworkResult<Boolean>> get() = _deleteSelectedItems
     val createOrderFlow: StateFlow<NetworkResult<Boolean>> get() = _createOrderFlow
 
@@ -79,6 +84,17 @@ class ItemsViewModel @Inject constructor(
             createOrderUseCase.invoke().collect { result ->
                 _createOrderFlow.value = result
             }
+        }
+    }
+    fun isSelected(id: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isSelected.postValue(isItemSelectedUseCase.invoke(id))
+        }
+    }
+    fun deselectAllItems() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _selectedItemsCount.postValue(0)
+            deselectAllItemsUseCase.invoke()
         }
     }
 }

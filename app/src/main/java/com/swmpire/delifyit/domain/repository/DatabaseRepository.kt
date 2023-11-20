@@ -8,4 +8,5 @@ interface DatabaseRepository {
     suspend fun getSelectedItemsCount() : Int
     suspend fun getItemsCount() : Int
     suspend fun deselectAllItems()
+    suspend fun isItemSelected(id: String) : Boolean
 }

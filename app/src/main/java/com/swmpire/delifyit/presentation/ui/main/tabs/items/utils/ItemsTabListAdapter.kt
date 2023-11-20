@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -17,7 +19,10 @@ import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsFragmentDirections
 import com.swmpire.delifyit.presentation.ui.main.tabs.items.ItemsViewModel
 
-class ItemsTabListAdapter(private val parentFragment: Fragment, private val itemsViewModel: ItemsViewModel) :
+class ItemsTabListAdapter(
+    private val parentFragment: Fragment,
+    private val itemsViewModel: ItemsViewModel
+) :
     RecyclerView.Adapter<ItemsTabListAdapter.ItemsTabViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemsTabViewHolder {
@@ -30,6 +35,7 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val item
 
     override fun onBindViewHolder(holder: ItemsTabViewHolder, position: Int) {
         val item = asyncListDiffer.currentList[position]
+
         with(holder.binding) {
             apply {
                 Glide.with(holder.itemView.context)
@@ -42,16 +48,19 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val item
                 textViewPrice.text =
                     holder.itemView.context.getString(R.string.price_tenge, item.price)
             }
+
+
             buttonChangeItem.setOnClickListener {
                 parentFragment.findNavController()
                     .navigate(ItemsFragmentDirections.actionItemsFragmentToChangeItemFragment(item))
             }
             cardViewHolder.setOnLongClickListener {
-                when(cardViewHolder.isChecked) {
+                when (cardViewHolder.isChecked) {
                     true -> {
                         itemsViewModel.setIsSelected(item.id, false)
                         cardViewHolder.isChecked = false
                     }
+
                     false -> {
                         itemsViewModel.setIsSelected(item.id, true)
                         cardViewHolder.isChecked = true
@@ -61,11 +70,12 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val item
                 true
             }
             cardViewHolder.setOnClickListener {
-                when(cardViewHolder.isChecked) {
+                when (cardViewHolder.isChecked) {
                     true -> {
                         cardViewHolder.isChecked = false
                         itemsViewModel.setIsSelected(item.id, false)
                     }
+
                     false -> {
                         if (isAnySelected) {
                             cardViewHolder.isChecked = true
@@ -82,6 +92,14 @@ class ItemsTabListAdapter(private val parentFragment: Fragment, private val item
         RecyclerView.ViewHolder(binding.root) {}
 
     fun submitData(data: List<ItemModel>) = asyncListDiffer.submitList(data)
+
+    fun deselectAll() {
+        itemsViewModel.deselectAllItems()
+        asyncListDiffer.currentList.forEachIndexed { index, itemModel ->
+            notifyItemChanged(index)
+        }
+        isAnySelected = false
+    }
 
     object ItemCallback : DiffUtil.ItemCallback<ItemModel>() {
         override fun areItemsTheSame(oldItem: ItemModel, newItem: ItemModel): Boolean =

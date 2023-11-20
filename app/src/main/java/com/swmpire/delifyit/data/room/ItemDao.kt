@@ -21,6 +21,9 @@ interface ItemDao {
     @Query("UPDATE items SET isSelected = :isSelected WHERE id = :id")
     suspend fun updateSelectStatus(id: String, isSelected: Boolean)
 
+    @Query("SELECT isSelected FROM items WHERE id = :id")
+    suspend fun isItemSelected(id: String) : Boolean
+
     @Query("SELECT * FROM items WHERE isSelected = 1")
     suspend fun getSelectedItems() : List<ItemEntity>
 

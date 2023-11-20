@@ -73,6 +73,9 @@ class ItemsFragment : Fragment() {
                     title = resources.getString(R.string.items)
                     navigationIcon = null
                 }
+                setNavigationOnClickListener {
+                    adapter.deselectAll()
+                }
                 menu.findItem(R.id.delete).setOnMenuItemClickListener {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(resources.getString(R.string.approvement))
