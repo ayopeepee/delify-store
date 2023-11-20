@@ -157,6 +157,7 @@ class ItemsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        itemsViewModel.deselectAllItems()
         _binding = null
     }
 
