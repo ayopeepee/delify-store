@@ -11,8 +11,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentSignInBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordConfirmValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordValidator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -35,19 +42,18 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        subscribeToTextObservers()
+
         with(binding) {
             buttonNext.setOnClickListener {
-                val email = textInputEmail.text.toString().trim()
-                val password = textInputPassword.text.toString().trim()
 
-                if (email.isNotBlank() && password.isNotBlank()) {
+                if (PasswordValidator.validate(textInputPassword, layoutInputPassword)
+                    && EmailValidator.validate(textInputEmail, layoutInputEmail)
+                ) {
                     signInViewModel.signInStore(
-                        email = email,
-                        password = password
+                        email = textInputEmail.text.toString().trim(),
+                        password = textInputPassword.text.toString().trim()
                     )
-                } else {
-                    // TODO: need to replace toast with "error view"
-                    Toast.makeText(requireContext(), "Введите Email и пароль", Toast.LENGTH_SHORT).show()
                 }
             }
             textViewResetPassword.setOnClickListener {
@@ -58,7 +64,7 @@ class SignInFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signInViewModel.signInFlow.collect { result ->
-                    when(result) {
+                    when (result) {
                         is NetworkResult.Loading -> {
                             with(binding) {
                                 buttonNext.isEnabled = false
@@ -66,27 +72,57 @@ class SignInFragment : Fragment() {
                                 textViewError.visibility = View.GONE
                             }
                         }
+
                         is NetworkResult.Error -> {
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                             with(binding) {
                                 buttonNext.isEnabled = true
                                 progressHorizontal.visibility = View.GONE
                                 textViewError.visibility = View.VISIBLE
+
+                                when (result.message) {
+                                    "An internal error has occurred. [ INVALID_LOGIN_CREDENTIALS ]" -> {
+                                        textViewError.text =
+                                            resources.getString(R.string.invalid_credentials)
+                                    }
+
+                                    else -> {
+                                        textViewError.text =
+                                            resources.getString(R.string.error_occurred)
+                                    }
+                                }
                             }
                         }
+
                         is NetworkResult.Success -> {
                             binding.buttonNext.isEnabled = true
                             if (result.data == true) {
                                 findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToTabsFragment())
                             } else {
-                                Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
+                                with(binding) {
+                                    progressHorizontal.visibility = View.GONE
+                                    textViewError.visibility = View.VISIBLE
+                                    textViewError.text =
+                                        resources.getString(R.string.error_occurred)
+                                }
                             }
                         }
+
                         is NetworkResult.Idle -> {}
                     }
                 }
             }
         }
+    }
+
+    private fun subscribeToTextObservers() {
+        PasswordTextChangeObserver(PasswordValidator).observe(
+            binding.textInputPassword,
+            binding.layoutInputPassword
+        )
+        EmailTextChangeObserver(EmailValidator).observe(
+            binding.textInputEmail,
+            binding.layoutInputEmail
+        )
     }
 
     override fun onDestroyView() {

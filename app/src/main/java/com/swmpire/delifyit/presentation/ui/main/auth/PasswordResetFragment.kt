@@ -14,6 +14,10 @@ import androidx.navigation.fragment.findNavController
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentPasswordResetBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.EmailValidator
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.auth.utils.PasswordValidator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -37,11 +41,15 @@ class PasswordResetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonReset.setOnClickListener {
-            // TODO: add validation
-            if (!binding.textInputEmail.text.isNullOrBlank()) {
-                passwordResetViewModel.resetPassword(email = binding.textInputEmail.text.toString().trim())
-            }
+        subscribeToTextObservers()
+
+        with(binding) {
+
+            buttonReset.setOnClickListener {
+                if (EmailValidator.validate(textInputEmail, layoutInputEmail)) {
+                    passwordResetViewModel.resetPassword(email = binding.textInputEmail.text.toString().trim())
+                }
+        }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -70,7 +78,7 @@ class PasswordResetFragment : Fragment() {
                                 findNavController().navigate(PasswordResetFragmentDirections.actionPasswordResetFragmentToSignInFragment())
                             } else {
                                 with(binding){
-                                    textViewError.text = "Произошла ошибка"
+                                    textViewError.text = resources.getString(R.string.error_occurred)
                                     textViewError.visibility = View.VISIBLE
                                 }
                             }
@@ -80,6 +88,13 @@ class PasswordResetFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun subscribeToTextObservers() {
+        EmailTextChangeObserver(EmailValidator).observe(
+            binding.textInputEmail,
+            binding.layoutInputEmail
+        )
     }
     override fun onDestroyView() {
         super.onDestroyView()

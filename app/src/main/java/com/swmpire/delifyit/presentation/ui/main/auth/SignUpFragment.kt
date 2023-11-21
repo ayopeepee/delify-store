@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentSignUpBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
@@ -80,23 +81,23 @@ class SignUpFragment : Fragment() {
                         }
 
                         is NetworkResult.Error -> {
-                            binding.progressHorizontal.visibility = View.GONE
-                            binding.buttonNext.isEnabled = true
-                            when (result.message) {
-                                "The email address is already in use by another account." -> {
-                                    with(binding.textViewError) {
-                                        text = "Аккаунт с таким email уже существует"
-                                        visibility = View.VISIBLE
-                                    }
-                                }
+                            with(binding) {
+                                progressHorizontal.visibility = View.GONE
+                                buttonNext.isEnabled = true
+                                textViewError.visibility = View.VISIBLE
 
-                                else -> {
-                                    with(binding.textViewError) {
-                                        text = "Произошла ошибка"
-                                        visibility = View.VISIBLE
+                                when (result.message) {
+                                    "The email address is already in use by another account." -> {
+                                            textViewError.text = resources.getString(R.string.user_email_already_exists)
+                                    }
+
+                                    else -> {
+                                            textViewError.text = resources.getString(R.string.error_occurred)
                                     }
                                 }
                             }
+
+
                         }
 
                         is NetworkResult.Success -> {
@@ -109,7 +110,7 @@ class SignUpFragment : Fragment() {
                                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSetStoreInfoFragment())
                             } else {
                                 with(binding) {
-                                    textViewError.text = "Произошла ошибка"
+                                    textViewError.text = resources.getString(R.string.error_occurred)
                                     textViewError.visibility = View.VISIBLE
                                     progressHorizontal.visibility = View.GONE
                                 }

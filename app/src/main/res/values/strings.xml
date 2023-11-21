@@ -47,4 +47,8 @@
     <string name="done">Готов</string>
     <string name="quantity">Количество: %d</string>
     <string name="order_id">Заказ №: %s</string>
+    <string name="invalid_credentials">Неверный email или пароль</string>
+    <string name="user_email_already_exists">Аккаунт с таким email уже существует</string>
+    <string name="error_occurred">Произошла ошибка</string>
+    <string name="reset_password_title">Мы пришлем письмо для восстановления на почту</string>
 </resources>
