@@ -1,6 +1,7 @@
 package com.swmpire.delifyit.presentation.ui.main.tabs.orders
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,10 +55,14 @@ class OrdersFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     ordersViewModel.getOrdersFlow.collect { result ->
-                        when(result) {
+                        when (result) {
                             is NetworkResult.Loading -> {
-                                binding.recyclerViewOrders.veil()
+                                with(binding) {
+                                    recyclerViewOrders.veil()
+                                    textViewNoOrders.visibility = View.GONE
+                                }
                             }
+
                             is NetworkResult.Success -> {
                                 if (result.data != null) {
                                     with(binding) {
@@ -66,9 +71,26 @@ class OrdersFragment : Fragment() {
                                     }
                                 }
                             }
+
                             is NetworkResult.Error -> {
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                with(binding) {
+                                    when (result.message) {
+                                        "no orders" -> {
+                                            recyclerViewOrders.unVeil()
+                                            swipeRefresh.isRefreshing = false
+                                            textViewNoOrders.visibility = View.VISIBLE
+                                        }
+
+                                        else -> Toast.makeText(
+                                            requireContext(),
+                                            result.message,
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                    }
+                                }
                             }
+
                             is NetworkResult.Idle -> {}
                         }
                     }

@@ -290,6 +290,8 @@ class FirestoreRepositoryImpl @Inject constructor(
                         firebaseFirestore.collection(STORES).document(currentStore.uid)
                     val snapshot = firebaseFirestore.collection(ORDERS)
                         .whereEqualTo(STORE_REFERENCE, storeReference)
+                        .whereGreaterThanOrEqualTo(CREATE_ORDER_DATE, DateFilter.getStartOfDay())
+                        .whereLessThan(CREATE_ORDER_DATE, DateFilter.getStartOfNextDay())
                         .get()
                         .await()
                         .documents
