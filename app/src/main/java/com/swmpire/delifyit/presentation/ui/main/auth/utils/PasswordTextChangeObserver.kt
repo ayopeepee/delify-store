@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.swmpire.delifyit.utils.TextChangeWatcher
 
 class PasswordTextChangeObserver(private val validator: PasswordValidator) : TextChangeWatcher {
     override fun observe(text: TextInputEditText, layout: TextInputLayout) {

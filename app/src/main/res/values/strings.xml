@@ -51,4 +51,9 @@
     <string name="user_email_already_exists">Аккаунт с таким email уже существует</string>
     <string name="error_occurred">Произошла ошибка</string>
     <string name="reset_password_title">Мы пришлем письмо для восстановления на почту</string>
+    <string name="tenge">₸</string>
+    <string name="empty_field">Поле не должно быть пустым</string>
+    <string name="invalid_characters">Поле содержит недопустимые символы</string>
+    <string name="select_image">Выберите изображение</string>
+    <string name="select_category">Выберите категорию</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.ui.main.auth.utils
+package com.swmpire.delifyit.utils
 
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
