@@ -35,10 +35,8 @@ class AddItemFragment : Fragment() {
     private var _binding: FragmentAddItemBinding? = null
     private val binding get() = _binding!!
     private var selectedImageUrl: String? = null
-    @Inject
-    lateinit var inputTextChangeObserver: InputTextChangeObserver
-    @Inject
-    lateinit var textValidator: TextValidator
+    @Inject lateinit var inputTextChangeObserver: InputTextChangeObserver
+    @Inject lateinit var textValidator: TextValidator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

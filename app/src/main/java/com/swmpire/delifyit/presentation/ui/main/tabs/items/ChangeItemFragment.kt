@@ -23,9 +23,12 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentChangeItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.TextValidator
 import com.swmpire.delifyit.utils.ItemCategory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangeItemFragment : Fragment() {
@@ -35,6 +38,10 @@ class ChangeItemFragment : Fragment() {
     private val binding get() = _binding!!
     private val argsItem: ChangeItemFragmentArgs by navArgs()
     private var newImageUrl: String? = null
+    @Inject
+    lateinit var inputTextChangeObserver: InputTextChangeObserver
+    @Inject
+    lateinit var textValidator: TextValidator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,12 +59,13 @@ class ChangeItemFragment : Fragment() {
         )
         binding.autoCompleteSelectCategory.setAdapter(dropDownMenuAdapter)
 
-        val pickImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            binding.imageViewItem.setImageURI(uri)
-            if (uri != null) {
-                changeItemViewModel.addItemImage(uri)
+        val pickImage =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                binding.imageViewItem.setImageURI(uri)
+                if (uri != null) {
+                    changeItemViewModel.addItemImage(uri)
+                }
             }
-        }
 
         with(binding) {
             textInputName.setText(argsItem.item.name)
@@ -66,23 +74,37 @@ class ChangeItemFragment : Fragment() {
             autoCompleteSelectCategory.setText(argsItem.item.category, true)
             toolbar.title = argsItem.item.name
 
+            subscribeToTextObservers()
+
             cardViewImageWrapper.setOnClickListener {
                 pickImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
-            textInputName.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
-            textInputDescription.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
-            textInputPrice.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
-            autoCompleteSelectCategory.doOnTextChanged { _, _, _, _ ->  buttonSave.isEnabled = true}
-            // TODO: add validation
+            textInputName.doOnTextChanged { _, _, _, _ -> buttonSave.isEnabled = true }
+            textInputDescription.doOnTextChanged { _, _, _, _ -> buttonSave.isEnabled = true }
+            textInputPrice.doOnTextChanged { _, _, _, _ -> buttonSave.isEnabled = true }
+            autoCompleteSelectCategory.doOnTextChanged { _, _, _, _ -> buttonSave.isEnabled = true }
+
             buttonSave.setOnClickListener {
-                changeItemViewModel.updateItem(ItemModel(
-                    id = argsItem.item.id,
-                    name = if (argsItem.item.name == textInputName.text.toString()) null else textInputName.text.toString(),
-                    description = if (argsItem.item.description == textInputDescription.text.toString()) null else textInputDescription.text.toString(),
-                    price = if (argsItem.item.price == textInputPrice.text.toString().toInt()) null else textInputPrice.text.toString().toInt(),
-                    category = if (argsItem.item.category == autoCompleteSelectCategory.text.toString()) null else autoCompleteSelectCategory.text.toString(),
-                    imageUrl = if (argsItem.item.imageUrl == newImageUrl) null else newImageUrl.toString()
-                ))
+                if (textValidator.validate(textInputName, layoutInputName)
+                    && textValidator.validate(textInputDescription, layoutInputDescription)
+                    && textValidator.validate(textInputPrice, layoutInputPrice)
+                ) {
+                    changeItemViewModel.updateItem(
+                        ItemModel(
+                            id = argsItem.item.id,
+                            name = if (argsItem.item.name == textInputName.text.toString()) null
+                            else textInputName.text.toString(),
+                            description = if (argsItem.item.description == textInputDescription.text.toString()) null
+                            else textInputDescription.text.toString(),
+                            price = if (argsItem.item.price == textInputPrice.text.toString().toInt()) null
+                            else textInputPrice.text.toString().toInt(),
+                            category = if (argsItem.item.category == autoCompleteSelectCategory.text.toString()) null
+                            else autoCompleteSelectCategory.text.toString(),
+                            imageUrl = if (argsItem.item.imageUrl == newImageUrl) null
+                            else newImageUrl.toString()
+                        )
+                    )
+                }
             }
             buttonCancel.setOnClickListener {
                 confirmCancel()
@@ -143,6 +165,7 @@ class ChangeItemFragment : Fragment() {
                                     textViewError.visibility = View.GONE
                                 }
                             }
+
                             is NetworkResult.Success -> {
                                 newImageUrl = result.data
                                 with(binding) {
@@ -151,13 +174,16 @@ class ChangeItemFragment : Fragment() {
                                 }
                                 Log.d("TAG", "Collected: ${result.data}")
                             }
+
                             is NetworkResult.Error -> {
                                 with(binding) {
                                     progressHorizontal.visibility = View.GONE
                                     textViewError.visibility = View.VISIBLE
                                 }
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
+
                             is NetworkResult.Idle -> {}
                         }
                     }
@@ -165,6 +191,7 @@ class ChangeItemFragment : Fragment() {
             }
         }
     }
+
     private fun confirmCancel() {
         if (binding.buttonSave.isEnabled) {
             MaterialAlertDialogBuilder(requireContext())
@@ -177,6 +204,16 @@ class ChangeItemFragment : Fragment() {
                 .show()
         } else {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun subscribeToTextObservers() {
+        with(binding) {
+            inputTextChangeObserver.run {
+                observe(textInputName, layoutInputName)
+                observe(textInputDescription, layoutInputDescription)
+                observe(textInputPrice, layoutInputPrice)
+            }
         }
     }
 
