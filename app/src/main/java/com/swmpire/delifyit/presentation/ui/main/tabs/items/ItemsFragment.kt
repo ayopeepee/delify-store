@@ -80,7 +80,7 @@ class ItemsFragment : Fragment() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(resources.getString(R.string.approvement))
                         .setMessage(resources.getString(R.string.delete_confirm))
-                        .setNegativeButton(resources.getString(R.string.no)) { _, _ ->}
+                        .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
                         .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                             itemsViewModel.deleteSelectedItems()
                             menu.findItem(R.id.delete).isVisible = false
@@ -95,9 +95,10 @@ class ItemsFragment : Fragment() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle(resources.getString(R.string.approvement))
                         .setMessage(resources.getString(R.string.create_order_confirm))
-                        .setNegativeButton(resources.getString(R.string.no)) { _, _, -> }
-                        .setPositiveButton(resources.getString(R.string.yes)) { _, _, ->
+                        .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
+                        .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                             itemsViewModel.createOrder()
+                            itemsViewModel.deselectAllItems()
                         }
                         .show()
                     true
@@ -110,21 +111,42 @@ class ItemsFragment : Fragment() {
                     itemsViewModel.itemsFlow.collect() { result ->
                         when (result) {
                             is NetworkResult.Loading -> {
-                                binding.recyclerViewItems.veil()
+                                with(binding) {
+                                    recyclerViewItems.veil()
+                                    textViewNoItems.visibility = View.GONE
+                                    lottieView.visibility = View.GONE
+                                }
                             }
 
                             is NetworkResult.Success -> {
                                 if (result.data != null) {
-                                    binding.recyclerViewItems.unVeil()
-                                    binding.swipeRefresh.isRefreshing = false
-                                    //adapter.submitData(result.data)
+                                    with(binding) {
+                                        recyclerViewItems.unVeil()
+                                        swipeRefresh.isRefreshing = false
+                                    }
                                 }
                             }
 
                             is NetworkResult.Error -> {
-                                // TODO: observe state
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
-                                    .show()
+                                with(binding) {
+                                    when (result.message) {
+                                        "nothing to show" -> {
+                                            recyclerViewItems.unVeil()
+                                            swipeRefresh.isRefreshing = false
+                                            textViewNoItems.visibility = View.VISIBLE
+                                            lottieView.visibility = View.VISIBLE
+                                        }
+
+                                        else -> {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                result.message,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+                                    }
+                                }
                             }
 
                             is NetworkResult.Idle -> {}
@@ -134,19 +156,20 @@ class ItemsFragment : Fragment() {
                 launch {
                     itemsViewModel.itemsCallbackFlow.collect { result ->
                         adapter.submitData(result)
-                        Log.d("TAG", "onViewCreated: submitted")
                     }
                 }
                 launch {
                     itemsViewModel.deleteSelectedItems.collect { result ->
-                        when(result) {
+                        when (result) {
                             is NetworkResult.Loading -> {}
-                            is NetworkResult.Success -> {
 
-                            }
+                            is NetworkResult.Success -> {}
+
                             is NetworkResult.Error -> {
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
+
                             is NetworkResult.Idle -> {}
                         }
                     }

@@ -60,6 +60,7 @@ class OrdersFragment : Fragment() {
                                 with(binding) {
                                     recyclerViewOrders.veil()
                                     textViewNoOrders.visibility = View.GONE
+                                    lottieView.visibility = View.GONE
                                 }
                             }
 
@@ -79,6 +80,7 @@ class OrdersFragment : Fragment() {
                                             recyclerViewOrders.unVeil()
                                             swipeRefresh.isRefreshing = false
                                             textViewNoOrders.visibility = View.VISIBLE
+                                            lottieView.visibility = View.VISIBLE
                                         }
 
                                         else -> Toast.makeText(

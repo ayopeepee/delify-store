@@ -58,4 +58,5 @@
     <string name="select_category">Выберите категорию</string>
     <string name="select_type">Выберите тип</string>
     <string name="no_orders">Заказов пока нет</string>
+    <string name="add_first_item">Добавьте свой первый товар!</string>
 </resources>
