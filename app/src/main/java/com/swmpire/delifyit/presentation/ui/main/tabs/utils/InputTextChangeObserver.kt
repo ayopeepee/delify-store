@@ -1,4 +1,4 @@
-package com.swmpire.delifyit.presentation.ui.main.tabs.items.utils
+package com.swmpire.delifyit.presentation.ui.main.tabs.utils
 
 import android.text.Editable
 import android.text.TextWatcher

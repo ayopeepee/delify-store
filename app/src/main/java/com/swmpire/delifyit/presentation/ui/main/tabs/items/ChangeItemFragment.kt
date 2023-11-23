@@ -23,8 +23,8 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentChangeItemBinding
 import com.swmpire.delifyit.domain.model.ItemModel
 import com.swmpire.delifyit.domain.model.NetworkResult
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.InputTextChangeObserver
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.TextValidator
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.TextValidator
 import com.swmpire.delifyit.utils.ItemCategory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

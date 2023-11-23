@@ -1,8 +1,8 @@
 package com.swmpire.delifyit.di.modules
 
 import android.content.Context
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.InputTextChangeObserver
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.TextValidator
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.TextValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

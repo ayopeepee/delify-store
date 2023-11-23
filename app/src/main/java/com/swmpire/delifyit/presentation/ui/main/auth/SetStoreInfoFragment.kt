@@ -15,12 +15,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentSetStoreInfoBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.TextValidator
 import com.swmpire.delifyit.utils.StoreTypes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SetStoreInfoFragment : Fragment() {
@@ -30,6 +34,8 @@ class SetStoreInfoFragment : Fragment() {
     private var _binding: FragmentSetStoreInfoBinding? = null
     private val binding get() = _binding!!
     private var selectedImageUrl: String? = null
+    @Inject lateinit var inputTextChangeObserver: InputTextChangeObserver
+    @Inject lateinit var textValidator: TextValidator
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +46,9 @@ class SetStoreInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        subscribeToTextObservers()
+
         val dropDownMenuAdapter = ArrayAdapter(
             requireContext(),
             R.layout.dropdown_menu_list_item_type,
@@ -58,10 +67,25 @@ class SetStoreInfoFragment : Fragment() {
         with(binding) {
 
             buttonNext.setOnClickListener {
-                // TODO: add validation
-                if (textInputName.text.toString().isNotBlank()
-                    && textInputDescription.text.toString().isNotBlank()
-                    && textInputAddress.text.toString().isNotBlank()
+
+                if (selectedImageUrl.isNullOrBlank()) {
+                    Snackbar.make(
+                        binding.scrollView,
+                        resources.getString(R.string.select_image),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                if (autoCompleteSelectType.text.toString().isBlank()) {
+                    Snackbar.make(
+                        binding.scrollView,
+                        resources.getString(R.string.select_type),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+
+                if (textValidator.validate(textInputName, layoutInputName)
+                    && textValidator.validate(textInputDescription, layoutInputDescription)
+                    && textValidator.validate(textInputAddress, layoutInputAddress)
                     && autoCompleteSelectType.text.toString().isNotBlank()
                     && !selectedImageUrl.isNullOrBlank()
                 ) {
@@ -147,6 +171,16 @@ class SetStoreInfoFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun subscribeToTextObservers() {
+        with(binding) {
+            inputTextChangeObserver.run {
+                observe(textInputName, layoutInputName)
+                observe(textInputDescription, layoutInputDescription)
+                observe(textInputAddress, layoutInputAddress)
             }
         }
     }

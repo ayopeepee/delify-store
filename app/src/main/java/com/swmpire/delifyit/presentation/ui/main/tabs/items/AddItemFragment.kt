@@ -17,12 +17,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentAddItemBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.InputTextChangeObserver
-import com.swmpire.delifyit.presentation.ui.main.tabs.items.utils.TextValidator
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.TextValidator
 import com.swmpire.delifyit.utils.ItemCategory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

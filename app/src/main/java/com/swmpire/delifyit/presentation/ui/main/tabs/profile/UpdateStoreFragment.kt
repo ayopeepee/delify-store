@@ -22,6 +22,8 @@ import com.swmpire.delifyit.R
 import com.swmpire.delifyit.databinding.FragmentUpdateStoreBinding
 import com.swmpire.delifyit.domain.model.NetworkResult
 import com.swmpire.delifyit.domain.model.StoreModel
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.InputTextChangeObserver
+import com.swmpire.delifyit.presentation.ui.main.tabs.utils.TextValidator
 import com.swmpire.delifyit.utils.ItemCategory
 import com.swmpire.delifyit.utils.StoreTypes
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UpdateStoreFragment : Fragment() {
@@ -38,6 +41,8 @@ class UpdateStoreFragment : Fragment() {
     private val binding get() = _binding!!
     private var newImageUrl: String? = null
     private var storeBeforeChanges: StoreModel? = null
+    @Inject lateinit var inputTextChangeObserver: InputTextChangeObserver
+    @Inject lateinit var textValidator: TextValidator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,22 +85,29 @@ class UpdateStoreFragment : Fragment() {
             autoCompleteSelectType.doOnTextChanged { _, _, _, _ -> buttonSave.isEnabled = true }
 
             buttonSave.setOnClickListener {
-                // TODO: add validation
-                updateStoreViewModel.updateStore(
-                    StoreModel(
-                        name = if (storeBeforeChanges?.name == textInputName.text.toString()) null
-                        else textInputName.text.toString(),
-                        description = if (storeBeforeChanges?.description == textInputDescription.text.toString()) null
-                        else textInputDescription.text.toString(),
-                        address = if (storeBeforeChanges?.address == textInputAddress.text.toString()) null
-                        else textInputAddress.text.toString(),
-                        type = if (storeBeforeChanges?.type == autoCompleteSelectType.text.toString()) null
-                        else autoCompleteSelectType.text.toString(),
-                        profilePictureUrl = if (storeBeforeChanges?.profilePictureUrl == newImageUrl) null
-                        else newImageUrl.toString(),
-                        isVerified = false
+
+                if (
+                    textValidator.validate(textInputName, layoutInputName)
+                    && textValidator.validate(textInputDescription, layoutInputDescription)
+                    && textValidator.validate(textInputAddress, layoutInputAddress)
+                    && autoCompleteSelectType.text.toString().isNotBlank()
+                ) {
+                    updateStoreViewModel.updateStore(
+                        StoreModel(
+                            name = if (storeBeforeChanges?.name == textInputName.text.toString()) null
+                            else textInputName.text.toString(),
+                            description = if (storeBeforeChanges?.description == textInputDescription.text.toString()) null
+                            else textInputDescription.text.toString(),
+                            address = if (storeBeforeChanges?.address == textInputAddress.text.toString()) null
+                            else textInputAddress.text.toString(),
+                            type = if (storeBeforeChanges?.type == autoCompleteSelectType.text.toString()) null
+                            else autoCompleteSelectType.text.toString(),
+                            profilePictureUrl = if (storeBeforeChanges?.profilePictureUrl == newImageUrl) null
+                            else newImageUrl.toString(),
+                            isVerified = false
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -229,6 +241,16 @@ class UpdateStoreFragment : Fragment() {
                 .show()
         } else {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun subscribeToTextObservers() {
+        with(binding) {
+            inputTextChangeObserver.run {
+                observe(textInputName, layoutInputName)
+                observe(textInputDescription, layoutInputDescription)
+                observe(textInputAddress, layoutInputAddress)
+            }
         }
     }
 

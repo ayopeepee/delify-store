@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.ui.main.tabs.profile.UpdateStoreFragment">
 
@@ -23,12 +24,30 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_view_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/error"
+        android:padding="4dp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        tools:text="Произошла ошибка" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,29 +96,6 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.68"/>
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progress_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/text_view_error"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/error"
-                android:padding="4dp"
-                android:textAlignment="center"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Произошла ошибка" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circle_image_view_profile"
                 android:layout_width="0dp"
@@ -115,6 +111,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_begin"
                 app:layout_constraintTop_toTopOf="@id/guideline_horizontal_profile_image_end">
@@ -131,6 +129,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/description"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_begin"
                 app:layout_constraintTop_toBottomOf="@id/layout_input_name">
@@ -147,6 +147,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/address"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_begin"
                 app:layout_constraintTop_toBottomOf="@id/layout_input_description">
@@ -205,4 +207,4 @@
 
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
