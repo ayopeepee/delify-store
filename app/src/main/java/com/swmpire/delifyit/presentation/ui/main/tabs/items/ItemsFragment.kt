@@ -98,7 +98,6 @@ class ItemsFragment : Fragment() {
                         .setNegativeButton(resources.getString(R.string.no)) { _, _ -> }
                         .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                             itemsViewModel.createOrder()
-                            itemsViewModel.deselectAllItems()
                         }
                         .show()
                     true
@@ -174,7 +173,20 @@ class ItemsFragment : Fragment() {
                         }
                     }
                 }
-                // TODO: collect result of creating order and when success deselect items
+                launch {
+                    itemsViewModel.createOrderFlow.collect { result ->
+                        when(result) {
+                            is NetworkResult.Loading -> {}
+                            is NetworkResult.Success -> {
+                                adapter.deselectAll()
+                            }
+                            is NetworkResult.Error -> {
+                                adapter.deselectAll()
+                            }
+                            is NetworkResult.Idle -> {}
+                        }
+                    }
+                }
             }
         }
     }
