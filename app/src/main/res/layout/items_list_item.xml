@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Сухарики 3 Корочки"
-                android:textAppearance="?attr/textAppearanceTitleMedium"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
             <TextView
                 android:id="@+id/text_view_description"
@@ -42,14 +42,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 tools:text="Супер-пупер вкусные сухари под пивас"
-                android:textAppearance="?attr/textAppearanceBodyMedium"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
             <TextView
                 android:id="@+id/text_view_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
-                tools:text="999"/>
+                tools:text="999"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
 
         </LinearLayout>

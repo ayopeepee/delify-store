@@ -1,7 +1,45 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.DelifyIt" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AppCompat.Title</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AppCompat.Title</item>
+        <item name="textAppearanceBodyLarge">@style/textInputStyle</item>
+        <item name="textAppearanceLabelLarge">@style/buttonStyle</item>
+        <item name="colorControlNormal">@color/md_theme_light_onPrimary</item>
+        <item name="toolbarNavigationButtonStyle">@style/appBarStyle</item>
+    </style>
+
+    <style name="ThemeOverlay.Material3.TextInputEditText">
+        <item name="fontFamily">@font/jost_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Title">
+        <item name="fontFamily">@font/jost_medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Medium">
+        <item name="fontFamily">@font/jost_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Small">
+        <item name="fontFamily">@font/jost_light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="textInputStyle" parent="ThemeOverlay.Design.TextInputEditText">
+        <item name="fontFamily">@font/jost_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="buttonStyle" parent="TextAppearance.AppCompat.Button">
+        <item name="fontFamily">@font/jost_medium</item>
+        <item name="textAllCaps">false</item>
+    </style>
+    
+    <style name="appBarStyle" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:tint">@color/md_theme_light_onPrimary</item>
     </style>
 </resources>
