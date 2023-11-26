@@ -174,6 +174,7 @@ class ItemsFragment : Fragment() {
                         }
                     }
                 }
+                // TODO: collect result of creating order and when success deselect items
             }
         }
     }

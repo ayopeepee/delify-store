@@ -309,6 +309,27 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getNumberOfOrdersToProceedCallback(): Flow<Int> {
+        return callbackFlow {
+            val currentStore = firebaseAuth.currentUser
+            if (currentStore != null) {
+                val storeReference = firebaseFirestore.collection(STORES).document(currentStore.uid)
+                val listener = firebaseFirestore.collection(ORDERS)
+                    .whereEqualTo(STORE_REFERENCE, storeReference)
+                    .whereEqualTo(ORDER_STATUS, CREATED)
+                    .whereGreaterThanOrEqualTo(CREATE_ORDER_DATE, DateFilter.getStartOfDay())
+                    .whereLessThan(CREATE_ORDER_DATE, DateFilter.getStartOfNextDay())
+                    .addSnapshotListener { value, error ->
+                        if (error != null) close(error)
+                        if (value != null) {
+                            trySend(value.size())
+                        }
+                    }
+                awaitClose { listener.remove() }
+            }
+        }
+    }
+
     override suspend fun getItemById(id: String): Flow<ItemModel?> {
         return flow {
             try {
@@ -430,6 +451,7 @@ class FirestoreRepositoryImpl @Inject constructor(
         const val ORDERS = "orders"
         const val ID = "id"
         const val ORDER_STATUS = "orderStatus"
+        const val CREATED = "Создан"
         const val READY = "Готов"
         const val DECLINED = "Отменен"
         const val READY_ORDER_DATE = "readyOrderDate"
