@@ -14,40 +14,34 @@ class EmailValidatorTest {
     private val mockLayout: TextInputLayout = mockk(relaxed = true)
     @Test
     fun `test correct email validation`() {
-        // arrange
+
         val email = "correct@email.com"
         every { mockText.text.toString() } returns email
 
-        // act
         val actual = EmailValidator.validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isTrue()
     }
 
     @Test
     fun `test incorrect (empty) email validation`() {
-        // arrange
+
         val email = ""
         every { mockText.text.toString() } returns email
 
-        // act
         val actual = EmailValidator.validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isFalse()
     }
 
     @Test
     fun `test incorrect (bad format) email validation`() {
-        // arrange
+
         val email = "asd...123"
         every { mockText.text.toString() } returns email
 
-        // act
         val actual = EmailValidator.validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isFalse()
     }
 }
