@@ -17,40 +17,34 @@ class TextValidatorTest {
 
     @Test
     fun `test correct text validation`() {
-        // arrange
+
         val text = "some text"
         every { mockText.text.toString() } returns text
 
-        // act
         val actual = TextValidator(mockContext).validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isTrue()
     }
 
     @Test
     fun `test incorrect (empty) text validation`() {
-        // arrange
+
         val text = " "
         every { mockText.text.toString() } returns text
 
-        // act
         val actual = TextValidator(mockContext).validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isFalse()
     }
 
     @Test
     fun `test incorrect (invalid symbols) text validation`() {
-        // arrange
+
         val text = "%incorrect#*%text"
         every { mockText.text.toString() } returns text
 
-        // act
         val actual = TextValidator(mockContext).validate(mockText, mockLayout)
 
-        // assert
         assertThat(actual).isFalse()
     }
 }

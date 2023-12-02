@@ -14,7 +14,7 @@ class TextValidator(private val context: Context) {
                     layout.error = context.getString(R.string.empty_field)
                     false
                 }
-                "[~@#\$%^&*()_\\-+=\\[\\]{};:'\"/<>]".toRegex().containsMatchIn(this) -> {
+                "[~@#\$%^&*()_+=\\[\\]{};:'\"/<>]".toRegex().containsMatchIn(this) -> {
                     layout.error = context.getString(R.string.invalid_characters)
                     false
                 }

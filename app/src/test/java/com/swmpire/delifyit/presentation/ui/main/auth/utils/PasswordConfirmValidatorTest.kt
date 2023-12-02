@@ -16,31 +16,27 @@ class PasswordConfirmValidatorTest {
 
     @Test
     fun `test correct password confirm (passwords equal)`() {
-        // arrange
+
         val password = "123456"
         val passwordConfirm = "123456"
         every { mockText.text.toString() } returns password
         every { mockConfirm.text.toString() } returns passwordConfirm
 
-        // act
         val actual = PasswordConfirmValidator.validate(mockText, mockConfirm, mockLayout)
 
-        // assert
         assertThat(actual).isTrue()
     }
 
     @Test
     fun `test incorrect password confirm (passwords not equal)`() {
-        // arrange
+
         val password = "123456"
         val passwordConfirm = "1234566789"
         every { mockText.text.toString() } returns password
         every { mockConfirm.text.toString() } returns passwordConfirm
 
-        // act
         val actual = PasswordConfirmValidator.validate(mockText, mockConfirm, mockLayout)
 
-        // assert
         assertThat(actual).isFalse()
     }
 }
