@@ -60,6 +60,7 @@ class ItemsFragment : Fragment() {
                 itemsViewModel.getAllItems()
             }
         }
+        itemsViewModel.getAllItems()
         itemsViewModel.selectedItemsCount.observe(viewLifecycleOwner, Observer { count ->
             with(binding.toolbar) {
                 if (count > 0) {
@@ -162,7 +163,10 @@ class ItemsFragment : Fragment() {
                         when (result) {
                             is NetworkResult.Loading -> {}
 
-                            is NetworkResult.Success -> {}
+                            is NetworkResult.Success -> {
+                                adapter.deselectAll()
+                                itemsViewModel.getAllItems()
+                            }
 
                             is NetworkResult.Error -> {
                                 Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)

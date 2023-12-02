@@ -50,7 +50,7 @@ class OrdersFragment : Fragment() {
             }
 
         }
-
+        ordersViewModel.getOrders()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
