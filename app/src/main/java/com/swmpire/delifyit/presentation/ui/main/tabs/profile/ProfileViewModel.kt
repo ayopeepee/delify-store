@@ -35,8 +35,6 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getStore()
-        getTotalOrdersByTimeInterval(TimeIntervals.DAY)
-        getTotalRevenueByTimeInterval(TimeIntervals.DAY)
     }
 
     fun getStore() {
@@ -63,5 +61,9 @@ class ProfileViewModel @Inject constructor(
                 _getTotalRevenueFlow.value = result
             }
         }
+    }
+    fun getCurrentOrdersAndRevenue() {
+        getTotalOrdersByTimeInterval(TimeIntervals.DAY)
+        getTotalRevenueByTimeInterval(TimeIntervals.DAY)
     }
 }

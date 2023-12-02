@@ -81,6 +81,7 @@ class ProfileFragment : Fragment() {
 
             })
         }
+        profileViewModel.getCurrentOrdersAndRevenue()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
